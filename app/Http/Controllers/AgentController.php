@@ -66,34 +66,40 @@ class AgentController extends Controller
         $usedProvider = null;
         $usedModel = null;
 
-        for ($agents = 0; $agents < 4; $agents++) {
-            switch ($agents) {
-                case 0:
-                    $agentName = 'gemini';
-                    $provider = Lab::Gemini;
-                    $model = 'gemini-3-pro-preview';
-                    break;
-                case 1:
-                    $agentName = 'openai';
-                    $provider = Lab::OpenAI;
-                    $model = 'gpt-5-nano';
-                    break;
-                case 2:
-                    $agentName = 'groq';
-                    $provider = Lab::Groq;
-                    $model = 'llama-3.3-70b-versatile';
-                    break;
-                case 3:
-                    $agentName = 'deepseek';
-                    $provider = Lab::DeepSeek;
-                    $model = 'deepseek-v3.2-exp';
-                    break;
-                default:
-                    $agentName = 'gemini';
-                    $provider = Lab::Gemini;
-                    $model = 'gemini-3-pro-preview';
-                    break;
-            }
+        $availableAgents = [
+            [
+                'name' => 'anthropic',
+                'provider' => Lab::Anthropic,
+                'model' => 'claude-3-5-sonnet-20240620',
+            ],
+            [
+                'name' => 'gemini',
+                'provider' => Lab::Gemini,
+                'model' => 'gemini-2.5-flash',
+            ],
+            [
+                'name' => 'openai',
+                'provider' => Lab::OpenAI,
+                'model' => 'gpt-4o-mini',
+            ],
+            [
+                'name' => 'groq',
+                'provider' => Lab::Groq,
+                'model' => 'llama-3.3-70b-versatile',
+            ],
+            [
+                'name' => 'deepseek',
+                'provider' => Lab::DeepSeek,
+                'model' => 'deepseek-chat',
+            ],
+        ];
+
+        shuffle($availableAgents);
+
+        for ($i = 0; $i < count($availableAgents); $i++) {
+            $agentName = $availableAgents[$i]['name'];
+            $provider = $availableAgents[$i]['provider'];
+            $model = $availableAgents[$i]['model'];
 
             try {
                 $agent = new SupportAgent();
@@ -114,11 +120,10 @@ class AgentController extends Controller
 
             } catch (Throwable $e) {
                 \Log::warning("AI Provider {$agentName} failed: " . $e->getMessage());
-                if ($agents === 3 && !$response) {
-                    $lastError = $e;
-                }
-                if (!$this->shouldSwitchProvider($e) && $agents === 3) {
-                    throw $e;
+                $lastError = $e;
+                
+                if (!$this->shouldSwitchProvider($e)) {
+                    break;
                 }
             }
         }
@@ -172,9 +177,18 @@ class AgentController extends Controller
             'exceeded',
             'expired',
             'invalid api key',
+            'incorrect api key',
+            'does not exist',
+            'decommissioned',
             'authentication',
             'unauthorized',
+            'insufficient',
+            'limit',
+            '400',
+            '401',
             '403',
+            '404',
+            '413',
             '429',
             '500',
             '502',

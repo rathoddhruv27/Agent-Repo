@@ -17,6 +17,8 @@ class SupportAgent implements Agent, Conversational
 
     public function instructions(): string  // instructions for AI
     {
+        $now = now()->toDateTimeString();
+        $timezone = config('app.timezone');
         $baseInstructions = <<<TEXT
 Rules:
 - Answer the user's question with a professional, structured tone.
@@ -27,6 +29,8 @@ Rules:
 - Consume less time for relevant response.
 - Keep continuity with previous chat messages in the same conversation.
 - Return structured and formatted responses for maximum readability.
+
+Current Date and Time: {$now} ({$timezone})
 TEXT;
 
         $user = auth()->user();
@@ -37,10 +41,10 @@ TEXT;
             if ($about || $respond) {
                 $baseInstructions .= "\n\nUser Custom Instructions (Follow these strictly):";
                 if ($about) {
-                    $baseInstructions .= "\n- User profile & context (What VnnoAI should know about the user): " . $about;
+                    $baseInstructions .= "\n- User profile & context (What Aureon should know about the user): " . $about;
                 }
                 if ($respond) {
-                    $baseInstructions .= "\n- How VnnoAI should respond: " . $respond;
+                    $baseInstructions .= "\n- How Aureon should respond: " . $respond;
                 }
             }
         }
@@ -48,13 +52,14 @@ TEXT;
         return $baseInstructions;
     }
 
-    // public function tools(): iterable  // php functions to call AI
-    // // IF tool is relevant to question call tool ELSE generate answer normally
-    // {
-    //     return [
-    //         new GetLaravelTipsTool(),
-    //     ];
-    // }
+    public function tools(): iterable  // php functions to call AI
+    // IF tool is relevant to question call tool ELSE generate answer normally
+    {
+        return [
+            new \App\Ai\Tools\GetLaravelTipsTool(),
+            new \App\Ai\Tools\SearchWebTool(),
+        ];
+    }
 
     // #[Timeout(10)]
     // public function timeout(): int

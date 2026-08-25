@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Agent - VnnoAI')
+@section('title', 'Agent - Aureon')
 
 @section('content')
 <div class="chat-wrapper">
@@ -37,7 +37,7 @@
 
         <div id="loading" class="d-none message-round ai-message">
             <div class="message-content">
-                <div class="message-label">VnnoAI</div>
+                <div class="message-label">Aureon</div>
                 <div class="d-flex gap-1 mt-2">
                     <div class="dot"></div>
                     <div class="dot" style="animation-delay: 0.2s"></div>
@@ -53,15 +53,14 @@
         <div class="chat-footer-container">
             <form id="agentForm" class="input-pill-container">
                 <input type="hidden" id="conversation_id" value="{{ $currentConversationId }}">
-                <textarea id="prompt" name="prompt" rows="1" placeholder="Ask anything..." class="pill-input" style="height: 44px;"></textarea>
+                <textarea id="prompt" name="prompt" rows="1" placeholder="Ask anything..." class="pill-input"></textarea>
                 <div class="pill-actions">
                     <!-- <button type="button" class="btn-pill-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></button> -->
-                    <button type="submit" id="submitBtn" class="btn-pill-send">
+                    <button type="submit" id="submitBtn" class="btn-pill-send" disabled>
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
                     </button>
                 </div>
             </form>
-            <div id="promptError" class="text-danger small mt-2 text-center d-none fw-bold"></div>
         </div>
     </div>
 </div>
@@ -138,12 +137,15 @@
         align-items: flex-end;
     }
     .user-bubble {
-        background: #2f2f2f;
+        background: linear-gradient(135deg, #3a3a3a, #252525);
         border-radius: 18px 18px 4px 18px;
-        padding: 10px 16px;
+        padding: 12px 18px;
         max-width: 80%;
         width: fit-content;
         text-align: left;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
     }
 
     .small-badge {
@@ -176,10 +178,11 @@
         left: 0;
         right: 0;
         padding: 20px;
-        background: linear-gradient(transparent, var(--bg-dark) 40%);
+        background: linear-gradient(transparent, rgba(15,15,15,0.85) 30%, rgba(15,15,15,1) 100%);
         display: flex;
         justify-content: center;
         z-index: 10;
+        pointer-events: none;
     }
 
     .chat-footer-container {
@@ -188,21 +191,28 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        pointer-events: auto;
     }
 
     .input-pill-container {
         width: 100%;
-        background: var(--bg-card);
+        background: rgba(45, 45, 45, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 28px;
         padding: 8px 12px;
         display: flex;
         align-items: center;
         gap: 8px;
-        transition: box-shadow 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
 
     .input-pill-container:focus-within {
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 0 0 1px rgba(255,255,255,0.1);
+        transform: translateY(-2px);
     }
 
     .pill-input {
@@ -215,6 +225,8 @@
         outline: none;
         resize: none;
         max-height: 200px;
+        height: 44px; /* default height */
+        line-height: 24px;
         overflow-y: auto;
     }
 
@@ -243,13 +255,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: white;
+        background: linear-gradient(135deg, #ffffff 0%, #c4c4c4 100%);
         border: none;
-        color: black;
+        color: #111;
         border-radius: 50%;
-        transition: opacity 0.2s;
+        box-shadow: 0 4px 10px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,1);
+        transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
     }
-    .btn-pill-send:hover { opacity: 0.8; }
+    .btn-pill-send:hover:not(:disabled) { 
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(255,255,255,0.25), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .btn-pill-send:active:not(:disabled) {
+        transform: translateY(2px);
+        box-shadow: 0 1px 2px rgba(255,255,255,0.1), inset 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .btn-pill-send:disabled {
+        opacity: 0.3;
+        cursor: default;
+        box-shadow: none;
+    }
 
     .thinking-chip {
         background: var(--sidebar-hover);
@@ -282,12 +308,89 @@
         text-align: center;
     }
     .welcome-title {
-        font-size: 2.4rem;
-        font-weight: 500;
+        font-size: 2.6rem;
+        font-weight: 600;
         letter-spacing: -0.02em;
-        color: #fff;
+        background: linear-gradient(180deg, #ffffff 0%, #a3a3a3 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 4px 25px rgba(255, 255, 255, 0.2);
     }
 
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+        .message-round {
+            padding: 20px 15px;
+        }
+        .chat-column {
+            padding: 30px 0 160px 0;
+        }
+        .welcome-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .message-round {
+            padding: 16px 12px;
+        }
+        .chat-column {
+            padding: 20px 0 140px 0;
+        }
+        .user-bubble {
+            max-width: 90%;
+        }
+        .welcome-title {
+            font-size: 1.8rem;
+        }
+        .chat-footer-wrapper {
+            padding: 12px;
+        }
+        .input-pill-container {
+            padding: 6px 10px;
+            background: #2f2f2f;
+            border-radius: 24px;
+            flex-direction: row;
+            align-items: center;
+        }
+        .pill-input {
+            width: 100%;
+            padding: 8px 4px;
+            height: 40px;
+        }
+        .pill-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .message-round {
+            padding: 12px 10px;
+        }
+        .chat-column {
+            padding: 15px 0 130px 0;
+        }
+        .user-bubble {
+            max-width: 95%;
+        }
+        .welcome-title {
+            font-size: 1.5rem;
+        }
+        .chat-footer-wrapper {
+            padding: 10px;
+        }
+        .message-label {
+            font-size: 0.8rem;
+        }
+        .message-text {
+            font-size: 0.95rem;
+        }
+        .pill-input {
+            font-size: 0.95rem;
+        }
+    }
 </style>
 @endsection
 
@@ -325,7 +428,7 @@
         const html = `
             <div class="message-round ai-message animate-in">
                 <div class="message-content">
-                    <div class="message-label">VnnoAI</div>
+                    <div class="message-label">Aureon</div>
                     <div class="markdown-rendered message-text">${marked.parse(content)}</div>
                     <div class="message-meta mt-3 d-flex gap-3 op-50">
                         <button class="btn-icon copy-btn-individual" title="Copy">
@@ -378,20 +481,13 @@
 
         const promptInput = document.getElementById('prompt');
         const prompt = promptInput.value.trim();
-        const promptError = document.getElementById('promptError');
         const loading = document.getElementById('loading');
         const errorBox = document.getElementById('errorBox');
         const submitBtn = document.getElementById('submitBtn');
 
-        promptError.classList.add('d-none');
         errorBox.classList.add('d-none');
 
-        if (!prompt) {
-            promptError.textContent = 'Please enter a message';
-            promptError.classList.remove('d-none');
-            promptInput.focus();
-            return;
-        }
+        if (!prompt) return;
 
         // Show user bubble immediately — visible during loading
         addUserBubble(prompt);
@@ -403,7 +499,8 @@
 
         // Clear input immediately
         promptInput.value = '';
-        promptInput.style.height = '44px';
+        promptInput.style.height = window.innerWidth <= 768 ? '40px' : '44px';
+        submitBtn.disabled = true; // Disable button after send
         
         scrollToBottom();
 
@@ -457,9 +554,12 @@
         }
     });
 
-    // Auto-resize textarea
+    // Auto-resize textarea and toggle send button
     document.getElementById('prompt').addEventListener('input', function() {
-        this.style.height = '44px';
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = this.value.trim() === '';
+        
+        this.style.height = window.innerWidth <= 768 ? '40px' : '44px';
         this.style.height = (this.scrollHeight) + 'px';
     });
 
@@ -530,18 +630,18 @@
         if (!container) return;
 
         const toast = document.createElement('div');
-        toast.className = `vnno-toast ${type}`;
+        toast.className = `aureon-toast ${type}`;
         
         const iconHtml = type === 'success' 
             ? `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`
             : `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
         toast.innerHTML = `
-            <div class="vnno-toast-content">
-                <div class="vnno-toast-icon">${iconHtml}</div>
+            <div class="aureon-toast-content">
+                <div class="aureon-toast-icon">${iconHtml}</div>
                 <span>${message}</span>
             </div>
-            <button class="vnno-toast-close">&times;</button>
+            <button class="aureon-toast-close">&times;</button>
         `;
 
         container.appendChild(toast);
@@ -554,7 +654,7 @@
             dismissToast(toast);
         }, 4000);
 
-        toast.querySelector('.vnno-toast-close').addEventListener('click', () => {
+        toast.querySelector('.aureon-toast-close').addEventListener('click', () => {
             clearTimeout(timer);
             dismissToast(toast);
         });

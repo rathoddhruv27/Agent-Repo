@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Sign In — VnnoAI')
+@section('title', 'Sign In — Aureon')
 
 @section('content')
 <div class="auth-center">
     <div class="auth-card">
 
         <div class="text-center mb-5">
-            <img src="{{ asset('robo.png') }}" alt="VnnoAI" width="52" height="52" class="mb-3">
+            <img src="{{ asset('robo.png') }}" alt="Aureon" width="52" height="52" class="mb-3">
             <h2 class="fw-bold text-white mb-1">Welcome back</h2>
-            <p class="auth-subtitle">Sign in to continue to VnnoAI</p>
+            <p class="auth-subtitle">Sign in to continue to Aureon</p>
         </div>
 
         @if(session('error'))

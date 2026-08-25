@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Agent - VnnoAI')
+@section('title', 'Agent - Aureon')
 
 @section('content')
 <div class="chat-wrapper">
@@ -15,7 +15,7 @@
 
         <div id="responseBox" class="message-round ai-message animate-in">
             <div class="message-content">
-                <div class="message-label">VnnoAI</div>
+                <div class="message-label">Aureon</div>
                 <div id="responseContent" class="markdown-rendered message-text" data-raw-content="{{ $lastInteraction->response ?? '' }}">
                     {!! Str::markdown($lastInteraction->response ?? '') !!}
                 </div>
@@ -34,7 +34,7 @@
 
         <div id="loading" class="d-none message-round ai-message">
             <div class="message-content">
-                <div class="message-label">VnnoAI</div>
+                <div class="message-label">Aureon</div>
                 <div class="d-flex gap-1 mt-2">
                     <div class="dot"></div>
                     <div class="dot" style="animation-delay: 0.2s"></div>
@@ -290,7 +290,7 @@
             </div>
             <div class="message-round ai-message animate-in">
                 <div class="message-content">
-                    <div class="message-label">VnnoAI</div>
+                    <div class="message-label">Aureon</div>
                     <div class="markdown-rendered message-text">${marked.parse(rawContent)}</div>
                     <div class="message-meta mt-3 d-flex gap-3 op-50">
                         <span class="small-badge">${agent.toUpperCase()}</span>

@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Create Account — VnnoAI')
+@section('title', 'Create Account — Aureon')
 
 @section('content')
 <div class="auth-center">
     <div class="auth-card mt-3">
 
         <div class="text-center mb-3">
-            <img src="{{ asset('robo.png') }}" alt="VnnoAI" width="44" height="44" class="mb-2">
+            <img src="{{ asset('robo.png') }}" alt="Aureon" width="44" height="44" class="mb-2">
             <h2 class="fw-bold text-white mb-1" style="font-size: 1.4rem;">Create your account</h2>
-            <p class="auth-subtitle">Start chatting with VnnoAI for free</p>
+            <p class="auth-subtitle">Start chatting with Aureon for free</p>
         </div>
 
         {{-- Flash error --}}

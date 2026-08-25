@@ -461,8 +461,64 @@
             margin: 4px 6px;
         }
 
+        /* Premium Upgrade Cards */
+        .upgrade-card {
+            border-radius: 12px;
+            padding: 24px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upgrade-card-free {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .upgrade-card-free:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .upgrade-card-plus {
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.03));
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .upgrade-card-plus:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px -10px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(245, 158, 11, 0.6);
+        }
+
+        /* 3D Premium Button */
+        .btn-upgrade-premium {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            border: none;
+            color: #111;
+            font-weight: 700;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
+        }
+
+        .btn-upgrade-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(245, 158, 11, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+
+        .btn-upgrade-premium:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
         /* Custom Premium Modals */
-        .vnno-modal-backdrop {
+        .aureon-modal-backdrop {
             position: fixed;
             top: 0;
             left: 0;
@@ -482,7 +538,7 @@
             to { opacity: 1; }
         }
 
-        .vnno-modal {
+        .aureon-modal {
             background-color: #171717; /* Match var(--sidebar-bg) */
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
@@ -500,7 +556,7 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        .vnno-modal-header {
+        .aureon-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -508,14 +564,14 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .vnno-modal-title {
+        .aureon-modal-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: white;
             margin: 0;
         }
 
-        .vnno-modal-close {
+        .aureon-modal-close {
             background: transparent;
             border: none;
             color: #b4b4b4;
@@ -529,18 +585,18 @@
             transition: color 0.15s;
         }
 
-        .vnno-modal-close:hover {
+        .aureon-modal-close:hover {
             color: white;
         }
 
-        .vnno-modal-body {
+        .aureon-modal-body {
             padding: 24px;
             overflow-y: auto;
             max-height: 70vh;
             color: #ececec;
         }
 
-        .vnno-modal-footer {
+        .aureon-modal-footer {
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -676,7 +732,7 @@
             pointer-events: none;
         }
 
-        .vnno-toast {
+        .aureon-toast {
             min-width: 280px;
             max-width: 380px;
             background-color: #212121;
@@ -696,19 +752,19 @@
             opacity: 0;
         }
 
-        .vnno-toast.show {
+        .aureon-toast.show {
             transform: translateX(0);
             opacity: 1;
         }
 
-        .vnno-toast-content {
+        .aureon-toast-content {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-grow: 1;
         }
 
-        .vnno-toast-icon {
+        .aureon-toast-icon {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -718,17 +774,17 @@
             border-radius: 50%;
         }
 
-        .vnno-toast.success .vnno-toast-icon {
+        .aureon-toast.success .aureon-toast-icon {
             background-color: rgba(16, 185, 129, 0.1);
             color: #10b981;
         }
 
-        .vnno-toast.error .vnno-toast-icon {
+        .aureon-toast.error .aureon-toast-icon {
             background-color: rgba(239, 68, 68, 0.1);
             color: #ef4444;
         }
 
-        .vnno-toast-close {
+        .aureon-toast-close {
             background: transparent;
             border: none;
             color: #676767;
@@ -742,7 +798,7 @@
             transition: color 0.15s;
         }
 
-        .vnno-toast-close:hover {
+        .aureon-toast-close:hover {
             color: white;
         }
     </style>
@@ -756,7 +812,7 @@
     <div class="sidebar">
         <a href="/" class="sidebar-brand">
             <img src="{{ asset('robo.png') }}" alt="Logo" width="40" height="40">
-            <h4 class="mb-0">VnnoAI</h4>
+            <h4 class="mb-0">Aureon</h4>
         </a>
 
         <div class="sidebar-nav-container">
@@ -783,11 +839,16 @@
                             }
                         @endphp
                         <div class="history-item-wrapper" data-id="{{ $agent->id }}">
-                            <a class="nav-sub-link {{ $isActive ? 'active' : '' }}" href="/history/{{ $agent->id }}" title="{{ $agent->prompt }}">
-                                <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> -->
+                            <a class="nav-sub-link {{ $isActive ? 'active' : '' }}" id="history-link-{{ $agent->id }}" href="/history/{{ $agent->id }}" title="{{ $agent->prompt }}">
                                 <span class="text-truncate">{{ Str::limit($agent->prompt, 20) }}</span>
                             </a>
-                            <button type="button" class="history-options-btn" onclick="showHistoryMenu(event, '{{ $agent->id }}', '{{ addslashes($agent->prompt) }}')">
+                            
+                            <!-- Inline Rename Input (Hidden by default) -->
+                            <div class="inline-rename-container" id="inline-rename-{{ $agent->id }}" style="display: none; width: 100%; padding: 4px 8px; margin: 2px 4px;">
+                                <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="inline-rename-input-{{ $agent->id }}" value="{{ $agent->prompt }}" style="font-size: 0.85rem;" autocomplete="off" onkeydown="handleInlineRenameKeydown(event, '{{ $agent->id }}')" onblur="cancelInlineRename('{{ $agent->id }}')">
+                            </div>
+
+                            <button type="button" class="history-options-btn" id="history-btn-{{ $agent->id }}" onclick="showHistoryMenu(event, '{{ $agent->id }}', '{{ addslashes($agent->prompt) }}')">
                                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
                             </button>
                         </div>
@@ -918,17 +979,17 @@
     </div>
 
     <!-- Custom Premium Modals Overlay Backdrop -->
-    <div id="vnnoModalBackdrop" class="vnno-modal-backdrop">
+    <div id="aureonModalBackdrop" class="aureon-modal-backdrop">
         <!-- Upgrade Plan Modal -->
-        <div id="upgradeModal" class="vnno-modal" style="display: none; max-width: 550px;">
-            <div class="vnno-modal-header">
-                <h5 class="vnno-modal-title">Upgrade your plan</h5>
-                <button class="vnno-modal-close" onclick="closeVnnoModal()">&times;</button>
+        <div id="upgradeModal" class="aureon-modal" style="display: none; max-width: 550px;">
+            <div class="aureon-modal-header">
+                <h5 class="aureon-modal-title">Upgrade your plan</h5>
+                <button class="aureon-modal-close" onclick="closeaureonModal()">&times;</button>
             </div>
-            <div class="vnno-modal-body">
+            <div class="aureon-modal-body">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <div class="p-3 border border-secondary rounded-3 h-100 d-flex flex-column justify-content-between" style="background-color: rgba(255,255,255,0.02);">
+                        <div class="upgrade-card upgrade-card-free">
                             <div>
                                 <h6 class="text-white fw-bold">Free</h6>
                                 <p class="text-muted small">USD $0/month</p>
@@ -938,11 +999,11 @@
                                     <li>✓ Standard support</li>
                                 </ul>
                             </div>
-                            <button class="btn btn-outline-secondary btn-sm w-100 mt-4" disabled>Current plan</button>
+                            <button class="btn btn-outline-secondary btn-sm w-100 mt-4" disabled style="background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">Current plan</button>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="p-3 border rounded-3 h-100 d-flex flex-column justify-content-between" style="border-color: #f59e0b !important; background-color: rgba(245, 158, 11, 0.05);">
+                        <div class="upgrade-card upgrade-card-plus">
                             <div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class="text-warning fw-bold mb-0">Plus</h6>
@@ -956,7 +1017,7 @@
                                     <li>✓ Custom instructions enabled</li>
                                 </ul>
                             </div>
-                            <button class="btn btn-warning btn-sm w-100 mt-4 fw-bold" onclick="alert('Thank you for subscribing!')">Upgrade to Plus</button>
+                            <button class="btn btn-upgrade-premium btn-sm w-100 mt-4 py-2" onclick="window.showToast('Thank you for subscribing!', 'success'); closeaureonModal();">Upgrade to Plus</button>
                         </div>
                     </div>
                 </div>
@@ -964,18 +1025,18 @@
         </div>
 
         <!-- Personalization Modal -->
-        <div id="personalizationModal" class="vnno-modal" style="display: none;">
-            <div class="vnno-modal-header">
-                <h5 class="vnno-modal-title">Personalization</h5>
-                <button class="vnno-modal-close" onclick="closeVnnoModal()">&times;</button>
+        <div id="personalizationModal" class="aureon-modal" style="display: none;">
+            <div class="aureon-modal-header">
+                <h5 class="aureon-modal-title">Personalization</h5>
+                <button class="aureon-modal-close" onclick="closeaureonModal()">&times;</button>
             </div>
-            <div class="vnno-modal-body">
+            <div class="aureon-modal-body">
                 <div class="mb-4">
-                    <label class="modal-label" for="customInstructionsAbout">What would you like VnnoAI to know about you to provide better responses?</label>
+                    <label class="modal-label" for="customInstructionsAbout">What would you like Aureon to know about you to provide better responses?</label>
                     <textarea class="modal-input modal-textarea" id="customInstructionsAbout" placeholder="Where are you based, what do you do for work, what are your hobbies and interests...">{{ Auth::user()->custom_instructions_about }}</textarea>
                 </div>
                 <div class="mb-4">
-                    <label class="modal-label" for="customInstructionsRespond">How would you like VnnoAI to respond?</label>
+                    <label class="modal-label" for="customInstructionsRespond">How would you like Aureon to respond?</label>
                     <textarea class="modal-input modal-textarea" id="customInstructionsRespond" placeholder="Formal or casual, long or short, opinionated or neutral...">{{ Auth::user()->custom_instructions_respond }}</textarea>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
@@ -985,19 +1046,19 @@
                     </div>
                 </div>
             </div>
-            <div class="vnno-modal-footer">
-                <button class="btn btn-outline-secondary btn-sm" onclick="closeVnnoModal()">Cancel</button>
+            <div class="aureon-modal-footer">
+                <button class="btn btn-outline-secondary btn-sm" onclick="closeaureonModal()">Cancel</button>
                 <button class="btn btn-primary btn-sm btn-premium" onclick="savePersonalization()">Save</button>
             </div>
         </div>
 
         <!-- Profile Modal -->
-        <div id="profileModal" class="vnno-modal" style="display: none; max-width: 450px;">
-            <div class="vnno-modal-header">
-                <h5 class="vnno-modal-title">My Profile</h5>
-                <button class="vnno-modal-close" onclick="closeVnnoModal()">&times;</button>
+        <div id="profileModal" class="aureon-modal" style="display: none; max-width: 450px;">
+            <div class="aureon-modal-header">
+                <h5 class="aureon-modal-title">My Profile</h5>
+                <button class="aureon-modal-close" onclick="closeaureonModal()">&times;</button>
             </div>
-            <div class="vnno-modal-body">
+            <div class="aureon-modal-body">
                 <div class="text-center mb-4">
                     <div class="avatar-wrapper position-relative mx-auto mb-3" style="width: 80px; height: 80px;">
                         <div class="avatar-container mx-auto" style="width: 80px; height: 80px; border: 2px solid rgba(255,255,255,0.15);">
@@ -1031,19 +1092,19 @@
                     <span class="small text-white-50">{{ Auth::user()->created_at ? \Carbon\Carbon::parse(Auth::user()->created_at)->format('M d, Y') : 'N/A' }}</span>
                 </div>
             </div>
-            <div class="vnno-modal-footer">
-                <button class="btn btn-outline-secondary btn-sm" onclick="closeVnnoModal()">Close</button>
+            <div class="aureon-modal-footer">
+                <button class="btn btn-outline-secondary btn-sm" onclick="closeaureonModal()">Close</button>
                 <button class="btn btn-primary btn-sm btn-premium" onclick="saveProfileName()">Save changes</button>
             </div>
         </div>
 
         <!-- Settings Modal -->
-        <div id="settingsModal" class="vnno-modal" style="display: none; max-width: 700px;">
-            <div class="vnno-modal-header">
-                <h5 class="vnno-modal-title">Settings</h5>
-                <button class="vnno-modal-close" onclick="closeVnnoModal()">&times;</button>
+        <div id="settingsModal" class="aureon-modal" style="display: none; max-width: 700px;">
+            <div class="aureon-modal-header">
+                <h5 class="aureon-modal-title">Settings</h5>
+                <button class="aureon-modal-close" onclick="closeaureonModal()">&times;</button>
             </div>
-            <div class="vnno-modal-body" style="padding: 0;">
+            <div class="aureon-modal-body" style="padding: 0;">
                 <div class="settings-layout">
                     <!-- Settings Sidebar -->
                     <div class="settings-sidebar p-3">
@@ -1070,7 +1131,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div>
                                     <p class="mb-0 text-white" style="font-size: 0.9rem;">Theme</p>
-                                    <p class="mb-0 text-muted small">Choose how VnnoAI looks on your device.</p>
+                                    <p class="mb-0 text-muted small">Choose how Aureon looks on your device.</p>
                                 </div>
                                 <select class="modal-input w-fit-content" style="min-width: 120px;">
                                     <option value="dark" selected>Dark</option>
@@ -1166,29 +1227,29 @@
                     </div>
                 </div>
             </div>
-            <div class="vnno-modal-footer">
-                <button class="btn btn-primary btn-sm btn-premium px-4" onclick="closeVnnoModal()">Done</button>
+            <div class="aureon-modal-footer">
+                <button class="btn btn-primary btn-sm btn-premium px-4" onclick="closeaureonModal()">Done</button>
             </div>
         </div>
 
         <!-- Help Modal -->
-        <div id="helpModal" class="vnno-modal" style="display: none; max-width: 500px;">
-            <div class="vnno-modal-header">
-                <h5 class="vnno-modal-title">Help & Support</h5>
-                <button class="vnno-modal-close" onclick="closeVnnoModal()">&times;</button>
+        <div id="helpModal" class="aureon-modal" style="display: none; max-width: 500px;">
+            <div class="aureon-modal-header">
+                <h5 class="aureon-modal-title">Help & Support</h5>
+                <button class="aureon-modal-close" onclick="closeaureonModal()">&times;</button>
             </div>
-            <div class="vnno-modal-body">
+            <div class="aureon-modal-body">
                 <h6 class="text-white fw-bold mb-3">Frequently Asked Questions</h6>
                 <div class="accordion accordion-flush mb-4" id="helpAccordion" style="--bs-accordion-bg: transparent; --bs-accordion-color: #ececec; --bs-accordion-btn-color: white; --bs-accordion-active-color: #f59e0b; --bs-accordion-active-bg: transparent; --bs-accordion-border-color: rgba(255,255,255,0.08);">
                     <div class="accordion-item border-secondary">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold" style="box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                What is VnnoAI?
+                                What is Aureon?
                             </button>
                         </h2>
                         <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
                             <div class="accordion-body px-0 text-white-50 small">
-                                VnnoAI is an advanced agentic coding and personal assistance chatbot framework built using Laravel and modern web design paradigms.
+                                Aureon is an advanced agentic coding and personal assistance chatbot framework built using Laravel and modern web design paradigms.
                             </div>
                         </div>
                     </div>
@@ -1222,11 +1283,26 @@
                     </div>
                 </div>
             </div>
-            <div class="vnno-modal-footer">
-                <a href="mailto:support@vnno.ai" class="btn btn-outline-light btn-sm me-auto" style="border-color: rgba(255,255,255,0.15);">Email Support</a>
-                <button class="btn btn-primary btn-sm btn-premium px-4" onclick="closeVnnoModal()">Done</button>
+            <div class="aureon-modal-footer">
+                <a href="mailto:support@aureon.ai" class="btn btn-outline-light btn-sm me-auto" style="border-color: rgba(255,255,255,0.15);">Email Support</a>
+                <button class="btn btn-primary btn-sm btn-premium px-4" onclick="closeaureonModal()">Done</button>
             </div>
         </div>
+        
+        <div id="deleteModal" class="aureon-modal" style="display: none; max-width: 400px; border-radius: 12px; background-color: #212121; overflow: hidden;">
+            <div class="aureon-modal-header border-0 pb-0 pt-4 px-4">
+                <h5 class="aureon-modal-title" style="font-size: 1.15rem; font-weight: 600;">Delete chat?</h5>
+            </div>
+            <div class="aureon-modal-body px-4 pt-3 pb-4">
+                <p class="mb-2 text-white" style="font-size: 0.95rem;">This will delete <strong id="deleteModalChatName"></strong>.</p>
+                <p class="text-white-50 small mb-0">This action cannot be undone.</p>
+            </div>
+            <div class="aureon-modal-footer pb-3 px-4 d-flex justify-content-end" style="background-color: transparent; border-top: none;">
+                <button class="btn btn-sm px-3 rounded-pill border-0 text-white-50" style="background: transparent;" onclick="closeaureonModal()" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Cancel</button>
+                <button class="btn btn-danger btn-sm px-4 ms-2 rounded-pill" onclick="confirmDelete()" style="background-color: #f43f5e; border-color: #f43f5e; font-weight: 500;">Delete</button>
+            </div>
+        </div>
+
     </div>
     @endauth
 
@@ -1267,21 +1343,54 @@
         }
 
         function handleRename() {
-            var newTitle = prompt("Rename conversation", activeHistoryTitle);
-            if (newTitle && newTitle !== activeHistoryTitle) {
-                var form = document.getElementById('renameForm');
-                form.action = '/history/' + activeHistoryId;
-                document.getElementById('renameInput').value = newTitle;
-                form.submit();
+            closeHistoryMenu();
+            
+            document.getElementById('history-link-' + activeHistoryId).style.display = 'none';
+            document.getElementById('history-btn-' + activeHistoryId).style.display = 'none';
+            
+            var container = document.getElementById('inline-rename-' + activeHistoryId);
+            var input = document.getElementById('inline-rename-input-' + activeHistoryId);
+            
+            container.style.display = 'block';
+            input.focus();
+            input.select();
+        }
+
+        function cancelInlineRename(id) {
+            document.getElementById('history-link-' + id).style.display = '';
+            document.getElementById('history-btn-' + id).style.display = '';
+            document.getElementById('inline-rename-' + id).style.display = 'none';
+        }
+
+        function handleInlineRenameKeydown(event, id) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                var newTitle = document.getElementById('inline-rename-input-' + id).value.trim();
+                var oldTitle = document.getElementById('history-link-' + id).getAttribute('title');
+                
+                if (newTitle && newTitle !== oldTitle) {
+                    var form = document.getElementById('renameForm');
+                    form.action = '/history/' + id;
+                    document.getElementById('renameInput').value = newTitle;
+                    form.submit();
+                } else {
+                    cancelInlineRename(id);
+                }
+            } else if (event.key === 'Escape') {
+                cancelInlineRename(id);
             }
         }
 
         function handleDelete() {
-            if (confirm("Are you sure you want to delete this conversation?")) {
-                var form = document.getElementById('deleteForm');
-                form.action = '/history/' + activeHistoryId;
-                form.submit();
-            }
+            document.getElementById('deleteModalChatName').textContent = activeHistoryTitle;
+            showaureonModal('deleteModal');
+            closeHistoryMenu();
+        }
+
+        function confirmDelete() {
+            var form = document.getElementById('deleteForm');
+            form.action = '/history/' + activeHistoryId;
+            form.submit();
         }
 
         window.addEventListener('keydown', function(e) {
@@ -1294,8 +1403,8 @@
         // Profile Popover and Custom Modals interactive logic
         const profileTrigger = document.getElementById('profileTrigger');
         const profilePopover = document.getElementById('profilePopover');
-        const vnnoModalBackdrop = document.getElementById('vnnoModalBackdrop');
-        const vnnoModals = ['upgradeModal', 'personalizationModal', 'profileModal', 'settingsModal', 'helpModal'];
+        const aureonModalBackdrop = document.getElementById('aureonModalBackdrop');
+        const aureonModals = ['upgradeModal', 'personalizationModal', 'profileModal', 'settingsModal', 'helpModal', 'deleteModal'];
 
         if (profileTrigger) {
             profileTrigger.addEventListener('click', function(e) {
@@ -1311,36 +1420,36 @@
             }
         });
 
-        function showVnnoModal(modalId) {
+        function showaureonModal(modalId) {
             if (profilePopover) profilePopover.style.display = 'none';
-            if (vnnoModalBackdrop) {
-                vnnoModalBackdrop.style.display = 'flex';
-                vnnoModals.forEach(id => {
+            if (aureonModalBackdrop) {
+                aureonModalBackdrop.style.display = 'flex';
+                aureonModals.forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.style.display = (id === modalId) ? 'block' : 'none';
                 });
             }
         }
 
-        function closeVnnoModal() {
-            if (vnnoModalBackdrop) {
-                vnnoModalBackdrop.style.display = 'none';
+        function closeaureonModal() {
+            if (aureonModalBackdrop) {
+                aureonModalBackdrop.style.display = 'none';
             }
         }
 
-        if (vnnoModalBackdrop) {
-            vnnoModalBackdrop.addEventListener('click', function(e) {
-                if (e.target === vnnoModalBackdrop) {
-                    closeVnnoModal();
+        if (aureonModalBackdrop) {
+            aureonModalBackdrop.addEventListener('click', function(e) {
+                if (e.target === aureonModalBackdrop) {
+                    closeaureonModal();
                 }
             });
         }
 
-        document.getElementById('popoverUpgrade')?.addEventListener('click', () => showVnnoModal('upgradeModal'));
-        document.getElementById('popoverPersonalization')?.addEventListener('click', () => showVnnoModal('personalizationModal'));
-        document.getElementById('popoverProfile')?.addEventListener('click', () => showVnnoModal('profileModal'));
-        document.getElementById('popoverSettings')?.addEventListener('click', () => showVnnoModal('settingsModal'));
-        document.getElementById('popoverHelp')?.addEventListener('click', () => showVnnoModal('helpModal'));
+        document.getElementById('popoverUpgrade')?.addEventListener('click', () => showaureonModal('upgradeModal'));
+        document.getElementById('popoverPersonalization')?.addEventListener('click', () => showaureonModal('personalizationModal'));
+        document.getElementById('popoverProfile')?.addEventListener('click', () => showaureonModal('profileModal'));
+        document.getElementById('popoverSettings')?.addEventListener('click', () => showaureonModal('settingsModal'));
+        document.getElementById('popoverHelp')?.addEventListener('click', () => showaureonModal('helpModal'));
 
         function switchSettingsTab(event, paneId) {
             const tabs = document.querySelectorAll('.settings-tab-btn');
@@ -1356,7 +1465,7 @@
 
         function savePersonalization() {
             window.showToast('Personalization instructions saved successfully!', 'success');
-            closeVnnoModal();
+            closeaureonModal();
         }
 
         function saveProfileName() {
@@ -1372,7 +1481,7 @@
                 initialCircleEls.forEach(el => el.textContent = initials);
 
                 window.showToast('Profile details updated successfully!', 'success');
-                closeVnnoModal();
+                closeaureonModal();
             }
         }
 
@@ -1437,18 +1546,18 @@
             if (!container) return;
 
             const toast = document.createElement('div');
-            toast.className = `vnno-toast ${type}`;
+            toast.className = `aureon-toast ${type}`;
             
             const iconHtml = type === 'success' 
                 ? `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`
                 : `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
             toast.innerHTML = `
-                <div class="vnno-toast-content">
-                    <div class="vnno-toast-icon">${iconHtml}</div>
+                <div class="aureon-toast-content">
+                    <div class="aureon-toast-icon">${iconHtml}</div>
                     <span>${message}</span>
                 </div>
-                <button class="vnno-toast-close">&times;</button>
+                <button class="aureon-toast-close">&times;</button>
             `;
 
             container.appendChild(toast);
@@ -1461,7 +1570,7 @@
                 dismissToast(toast);
             }, 4000);
 
-            toast.querySelector('.vnno-toast-close').addEventListener('click', () => {
+            toast.querySelector('.aureon-toast-close').addEventListener('click', () => {
                 clearTimeout(timer);
                 dismissToast(toast);
             });
