@@ -375,7 +375,7 @@
         /* Markdown Styles */
         .markdown-rendered p:last-child { margin-bottom: 0; }
         .markdown-rendered pre {
-            background: #0f172a;
+            background: #0d1117;
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
@@ -386,6 +386,62 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
+        }
+
+        /* Enhanced Code Blocks (ChatGPT Style) */
+        .code-block-wrapper {
+            background: #0d1117;
+            border-radius: 8px;
+            margin: 1.2rem 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 16px;
+            color: #b4b4b4;
+            font-size: 0.75rem;
+            font-family: sans-serif;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .code-block-header .code-block-lang {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .code-block-header .code-block-copy-btn {
+            background: transparent;
+            border: none;
+            color: #b4b4b4;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            font-size: 0.75rem;
+            padding: 0;
+        }
+        .code-block-header .code-block-copy-btn:hover {
+            color: #fff;
+        }
+        .code-block-wrapper .markdown-rendered pre,
+        .code-block-wrapper pre {
+            margin: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+        .markdown-rendered pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            color: inherit;
         }
 
         .empty-state {
@@ -1582,6 +1638,57 @@
                 toast.remove();
             });
         }
+
+        // Enhanced Code Blocks
+        window.enhanceCodeBlocks = function(container = document) {
+            container.querySelectorAll('pre').forEach(pre => {
+                if (pre.classList.contains('enhanced')) return;
+                pre.classList.add('enhanced');
+                
+                const code = pre.querySelector('code');
+                let language = 'text';
+                if (code) {
+                    const match = code.className.match(/language-(\w+)/);
+                    if (match) language = match[1];
+                }
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                
+                const header = document.createElement('div');
+                header.className = 'code-block-header';
+                
+                header.innerHTML = `
+                    <div class="code-block-lang">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"></path></svg>
+                        <span>${language}</span>
+                    </div>
+                    <button class="code-block-copy-btn" title="Copy code">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                `;
+                
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(header);
+                wrapper.appendChild(pre);
+                
+                const copyBtn = header.querySelector('.code-block-copy-btn');
+                copyBtn.addEventListener('click', () => {
+                    const textToCopy = code ? code.innerText : pre.innerText;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalHtml = copyBtn.innerHTML;
+                        copyBtn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalHtml;
+                        }, 2000);
+                    });
+                });
+            });
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            window.enhanceCodeBlocks();
+        });
 
         // Show session toasts if any exist
         @if(session('success'))

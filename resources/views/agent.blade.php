@@ -438,6 +438,9 @@
                 </div>
             </div>`;
         container.insertAdjacentHTML('beforeend', html);
+        if (window.enhanceCodeBlocks) {
+            window.enhanceCodeBlocks(container);
+        }
         setTimeout(scrollToBottom, 50);
     }
 
