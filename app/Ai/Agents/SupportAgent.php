@@ -67,4 +67,26 @@ TEXT;
     //     return 10;
     // }
 
+    /**
+     * Get the list of messages comprising the conversation so far.
+     */
+    public function messages(): iterable
+    {
+        if (! $this->conversationId) {
+            return [];
+        }
+
+        $history = \App\Models\Agent::where('user_id', $this->conversationUser->id ?? auth()->id())
+            ->where('conversation_id', $this->conversationId)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $messages = [];
+        foreach ($history as $interaction) {
+            $messages[] = new UserMessage($interaction->prompt);
+            $messages[] = new AssistantMessage($interaction->response);
+        }
+
+        return $messages;
+    }
 }

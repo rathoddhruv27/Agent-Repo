@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div id="errorBox" class="alert alert-danger mx-auto mt-4 d-none" style="max-width: 600px; border-radius: 12px; background: #450a0a; border: 1px solid #7f1d1d; color: #fecaca;"></div>
+
     </div>
 
     <div class="chat-footer-wrapper">
@@ -441,6 +441,23 @@
         setTimeout(scrollToBottom, 50);
     }
 
+    function handleAiError(message, promptInput, originalPrompt) {
+        window.showToast(message, 'error', 3000);
+        
+        // Remove the failed user bubble from the UI
+        const bubbles = document.querySelectorAll('.user-message');
+        if (bubbles.length > 0) {
+            bubbles[bubbles.length - 1].remove();
+        }
+        
+        // Restore the prompt text so the user doesn't lose it
+        if (promptInput) {
+            promptInput.value = originalPrompt;
+            promptInput.style.height = 'auto';
+            promptInput.style.height = (promptInput.scrollHeight) + 'px';
+        }
+    }
+
     function addUserBubble(prompt) {
         const container = document.getElementById('chatResponseArea');
         
@@ -451,7 +468,7 @@
         container.insertAdjacentHTML('beforeend', `
             <div class="message-round user-message animate-in">
                 <div class="message-content user-content">
-                    <div class="message-label text-end fs-5">You</div>
+                    <div class="message-label text-end fs-5"></div>
                     <div class="message-text user-bubble">${safePrompt}</div>
                 </div>
             </div>`);
@@ -496,10 +513,7 @@
         const promptInput = document.getElementById('prompt');
         const prompt = promptInput.value.trim();
         const loading = document.getElementById('loading');
-        const errorBox = document.getElementById('errorBox');
         const submitBtn = document.getElementById('submitBtn');
-
-        errorBox.classList.add('d-none');
 
         if (!prompt) return;
 
@@ -556,15 +570,13 @@
                 }
                 promptInput.focus();
             } else {
-                errorBox.textContent = result.message || 'Error generating response.';
-                errorBox.classList.remove('d-none');
+                handleAiError(result.message || 'Error generating response.', promptInput, prompt);
             }
 
         } catch (error) {
             loading.classList.add('d-none');
             submitBtn.disabled = false;
-            errorBox.textContent = 'Connection error. Please try again.';
-            errorBox.classList.remove('d-none');
+            handleAiError('Connection error. Please try again.', promptInput, prompt);
         }
     });
 
