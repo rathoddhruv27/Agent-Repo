@@ -461,19 +461,33 @@
     function addToSidebar(id, prompt) {
         const navGroup = document.querySelector('.sidebar-nav-container .nav-group');
         if (!navGroup) return;
+
+        // Remove active class from any existing links
+        navGroup.querySelectorAll('.nav-sub-link').forEach(l => l.classList.remove('active'));
+
         const label = prompt.length > 20 ? prompt.substring(0, 20) + '...' : prompt;
         const safeTitle = prompt.replace(/"/g, '&quot;');
-        const link = document.createElement('a');
-        link.className = 'nav-sub-link';
-        link.href = '/history/' + id;
-        link.title = safeTitle;
-        link.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; flex-shrink: 0;"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span class="text-truncate">${label}</span>`;
+        const safeJsPrompt = prompt.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'history-item-wrapper';
+        wrapper.setAttribute('data-id', id);
+        wrapper.innerHTML = `
+            <a class="nav-sub-link active" id="history-link-${id}" href="/history/${id}" title="${safeTitle}">
+                <span class="text-truncate">${label}</span>
+            </a>
+            
+            <div class="inline-rename-container" id="inline-rename-${id}" style="display: none; width: 100%; padding: 4px 8px; margin: 2px 4px;">
+                <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="inline-rename-input-${id}" value="${safeTitle}" style="font-size: 0.85rem;" autocomplete="off" onkeydown="handleInlineRenameKeydown(event, '${id}')" onblur="cancelInlineRename('${id}')">
+            </div>
+
+            <button type="button" class="history-options-btn" id="history-btn-${id}" onclick="showHistoryMenu(event, '${id}', '${safeJsPrompt}')">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+            </button>`;
         
         // Insert after the "Recents" title
         const title = navGroup.querySelector('.nav-group-title');
-        title ? title.insertAdjacentElement('afterend', link) : navGroup.prepend(link);
+        title ? title.insertAdjacentElement('afterend', wrapper) : navGroup.prepend(wrapper);
     }
 
     document.getElementById('agentForm').addEventListener('submit', async function (e) {
