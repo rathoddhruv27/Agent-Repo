@@ -143,6 +143,7 @@
         display: flex;
         flex-direction: column;
         height: 100vh;
+        height: 100dvh;
         overflow: hidden;
     }
 
@@ -429,6 +430,7 @@
         }
         .chat-footer-wrapper {
             padding: 12px;
+            padding-bottom: env(safe-area-inset-bottom, 24px);
         }
         .input-pill-container {
             padding: 6px 10px;
@@ -464,6 +466,7 @@
         }
         .chat-footer-wrapper {
             padding: 10px;
+            padding-bottom: env(safe-area-inset-bottom, 24px);
         }
         .message-label {
             font-size: 0.8rem;

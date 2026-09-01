@@ -32,6 +32,7 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
+            min-height: 100dvh;
             margin: 0;
             display: flex;
             overflow: hidden; /* Lock the whole page scroll */
@@ -43,6 +44,7 @@
             background-color: var(--sidebar-bg);
             color: white;
             height: 100vh;
+            height: 100dvh;
             position: fixed;
             left: 0;
             top: 0;
@@ -152,6 +154,7 @@
             margin-left: 280px;
             flex: 1;
             height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             background-color: var(--bg-dark);
