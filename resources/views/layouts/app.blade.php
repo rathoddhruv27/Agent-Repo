@@ -1377,6 +1377,21 @@
     @endauth
 
     <main class="main-content" style="{{ Auth::check() ? '' : 'margin-left: 0; width: 100%;' }}">
+        @auth
+        <!-- Mobile Header -->
+        <div class="mobile-header d-lg-none d-flex justify-content-between align-items-center p-3 position-absolute w-100" style="z-index: 50; top: 0; background: linear-gradient(rgba(13,13,13,0.9) 50%, transparent);">
+            <button class="btn btn-icon d-lg-none" onclick="toggleSidebar()" style="color: var(--text-main); background: transparent; border: none; padding: 4px;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <h5 class="mb-0 text-white fw-bold" style="font-size: 1.1rem;">Aureon</h5>
+            <a href="/" class="btn btn-icon" style="color: var(--text-main); background: transparent; border: none; padding: 4px;">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </a>
+        </div>
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebarOverlay" class="d-none d-lg-none" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); z-index: 999;" onclick="toggleSidebar()"></div>
+        @endauth
+
         @yield('content')
     </main>
 
@@ -1385,6 +1400,16 @@
     <script>
         let activeHistoryId = null;
         let activeHistoryTitle = "";
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if(sidebar) sidebar.classList.toggle('show');
+            if(overlay) {
+                if(sidebar.classList.contains('show')) overlay.classList.remove('d-none');
+                else overlay.classList.add('d-none');
+            }
+        }
 
         function showHistoryMenu(event, id, title) {
             event.preventDefault();

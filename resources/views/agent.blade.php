@@ -407,7 +407,7 @@
             padding: 20px 15px;
         }
         .chat-column {
-            padding: 30px 0 160px 0;
+            padding: 70px 0 160px 0;
         }
         .welcome-title {
             font-size: 2rem;
@@ -419,7 +419,7 @@
             padding: 16px 12px;
         }
         .chat-column {
-            padding: 20px 0 140px 0;
+            padding: 70px 0 140px 0;
         }
         .user-bubble {
             max-width: 90%;
@@ -454,7 +454,7 @@
             padding: 12px 10px;
         }
         .chat-column {
-            padding: 15px 0 130px 0;
+            padding: 70px 0 130px 0;
         }
         .user-bubble {
             max-width: 95%;
