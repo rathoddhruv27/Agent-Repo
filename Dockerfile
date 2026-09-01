@@ -43,7 +43,7 @@ RUN if [ -f package.json ]; then npm install && npm run build; fi
 RUN cp .env.example .env \
     && sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env \
     && touch database/database.sqlite \
-    && php artisan key:generate
+    && sed -i 's/APP_KEY=.*/APP_KEY=base64:PT187RB50Y+j3N0Cutl+QNk\/\/CiXRPPvNg9iKKIwPNQ=/' .env
 
 # Start Laravel development server
 # Render uses the PORT environment variable
