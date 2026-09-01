@@ -17,7 +17,7 @@
         <div class="auth-card mt-3">
 
             <div class="text-center mb-3">
-                <img src="{{ asset('robo.png') }}" alt="Aureon" width="44" height="44" class="mb-2">
+                <img src="{{ asset('robo.png') }}" alt="Aureon" style="height: 140px; width: auto;" class="mb-2">
                 <h2 class="fw-bold text-white mb-1" style="font-size: 1.4rem;">Create your account</h2>
                 <p class="auth-subtitle">Start chatting with Aureon for free</p>
             </div>
