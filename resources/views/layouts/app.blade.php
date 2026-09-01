@@ -581,7 +581,7 @@
             right: 0;
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(1.5px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -610,6 +610,20 @@
         @keyframes modalScaleIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
+        }
+
+        .btn-modal-cancel {
+            background: transparent;
+            border: 1px solid transparent;
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 50rem;
+            padding: 0.375rem 1rem;
+            font-size: 0.875rem;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        .btn-modal-cancel:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .aureon-modal-header {
@@ -658,7 +672,7 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 16px 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: none;
             background-color: #0d0d0d;
         }
 
@@ -1103,8 +1117,8 @@
                 </div>
             </div>
             <div class="aureon-modal-footer">
-                <button class="btn btn-outline-secondary btn-sm" onclick="closeaureonModal()">Cancel</button>
-                <button class="btn btn-primary btn-sm btn-premium" onclick="savePersonalization()">Save</button>
+                <button class="btn-modal-cancel" onclick="closeaureonModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm btn-premium px-4 rounded-pill" onclick="savePersonalization()">Save</button>
             </div>
         </div>
 
@@ -1143,14 +1157,14 @@
                     <input type="email" class="modal-input" value="{{ Auth::user()->email }}" readonly disabled style="opacity: 0.6;">
                 </div>
                 
-                <div class="d-flex justify-content-between align-items-center border-top border-secondary pt-3 mt-3">
+                <div class="d-flex justify-content-between align-items-center pt-3 mt-3">
                     <span class="small">Account Created On</span>
                     <span class="small text-white-50">{{ Auth::user()->created_at ? \Carbon\Carbon::parse(Auth::user()->created_at)->format('M d, Y') : 'N/A' }}</span>
                 </div>
             </div>
             <div class="aureon-modal-footer">
-                <button class="btn btn-outline-secondary btn-sm" onclick="closeaureonModal()">Close</button>
-                <button class="btn btn-primary btn-sm btn-premium" onclick="saveProfileName()">Save changes</button>
+                <button class="btn-modal-cancel" onclick="closeaureonModal()">Close</button>
+                <button class="btn btn-primary btn-sm btn-premium px-4 rounded-pill" onclick="saveProfileName()">Save changes</button>
             </div>
         </div>
 
@@ -1297,7 +1311,7 @@
             <div class="aureon-modal-body">
                 <h6 class="text-white fw-bold mb-3">Frequently Asked Questions</h6>
                 <div class="accordion accordion-flush mb-4" id="helpAccordion" style="--bs-accordion-bg: transparent; --bs-accordion-color: #ececec; --bs-accordion-btn-color: white; --bs-accordion-active-color: #f59e0b; --bs-accordion-active-bg: transparent; --bs-accordion-border-color: rgba(255,255,255,0.08);">
-                    <div class="accordion-item border-secondary">
+                    <div class="accordion-item border-0">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold text-white" style="box-shadow: none; background: transparent;" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
                                 What is Aureon?
@@ -1309,7 +1323,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-item border-secondary">
+                    <div class="accordion-item border-0 d-none">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold text-white" style="box-shadow: none; background: transparent;" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
                                 How do I export my data?

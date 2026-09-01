@@ -58,11 +58,57 @@
     <div class="chat-footer-wrapper">
         <div class="chat-footer-container">
             @if($messages->isEmpty())
+            @php
+                $allSuggestions = [
+                    ['prompt' => 'Write a Laravel controller for products', 'label' => 'Write a Laravel controller...'],
+                    ['prompt' => 'How do I optimize database queries?', 'label' => 'How to optimize queries?'],
+                    ['prompt' => 'Explain Eloquent relationships', 'label' => 'Explain Eloquent'],
+                    ['prompt' => 'Generate a modern CSS button', 'label' => 'Generate CSS button'],
+                    ['prompt' => 'What are Laravel Service Providers?', 'label' => 'Service Providers?'],
+                    ['prompt' => 'Create a beautiful pricing table in CSS', 'label' => 'Pricing Table CSS'],
+                    ['prompt' => 'How do I secure an API in Laravel?', 'label' => 'API Security'],
+                    ['prompt' => 'Explain the concept of Dependency Injection', 'label' => 'Dependency Injection'],
+                    ['prompt' => 'Write a Vue.js component for a modal', 'label' => 'Vue.js Modal'],
+                    ['prompt' => 'What are the best practices for Dockerizing a Laravel app?', 'label' => 'Dockerize Laravel'],
+                    ['prompt' => 'How do I set up a cron job in Laravel?', 'label' => 'Laravel Cron Jobs'],
+                    ['prompt' => 'Explain React hooks with examples', 'label' => 'React Hooks'],
+                    ['prompt' => 'How to handle file uploads in PHP?', 'label' => 'File Uploads'],
+                    ['prompt' => 'Create an aesthetic dark mode toggle in JS', 'label' => 'Dark Mode Toggle'],
+                    ['prompt' => 'Explain Laravel Middleware with examples', 'label' => 'Laravel Middleware'],
+                    ['prompt' => 'Write a regex to validate an email address', 'label' => 'Email Regex'],
+                    ['prompt' => 'How do I implement pagination in Laravel?', 'label' => 'Laravel Pagination'],
+                    ['prompt' => 'Generate a basic HTML5 boilerplate', 'label' => 'HTML5 Boilerplate'],
+                    ['prompt' => 'Explain the difference between GET and POST', 'label' => 'GET vs POST'],
+                    ['prompt' => 'Create a responsive CSS grid layout', 'label' => 'CSS Grid Layout'],
+                    ['prompt' => 'What is the difference between Vue and React?', 'label' => 'Vue vs React'],
+                    ['prompt' => 'How to implement JWT authentication in Laravel?', 'label' => 'JWT Authentication'],
+                    ['prompt' => 'Write a SQL query to join three tables', 'label' => 'SQL Joins'],
+                    ['prompt' => 'Explain SOLID principles in object-oriented programming', 'label' => 'SOLID Principles'],
+                    ['prompt' => 'How do I use Laravel Queues?', 'label' => 'Laravel Queues'],
+                    ['prompt' => 'Generate a random password using PHP', 'label' => 'Random Password PHP'],
+                    ['prompt' => 'What are the new features in PHP 8.2?', 'label' => 'PHP 8.2 Features'],
+                    ['prompt' => 'Explain RESTful API design', 'label' => 'RESTful API'],
+                    ['prompt' => 'Create a sliding image carousel in Vanilla JS', 'label' => 'JS Image Carousel'],
+                    ['prompt' => 'How to configure a CI/CD pipeline in GitHub Actions?', 'label' => 'GitHub Actions CI/CD'],
+                    ['prompt' => 'What is the difference between require and include in PHP?', 'label' => 'Require vs Include'],
+                    ['prompt' => 'Explain the MVC architecture', 'label' => 'MVC Architecture'],
+                    ['prompt' => 'Write a Python script to scrape a website', 'label' => 'Python Web Scraper'],
+                    ['prompt' => 'How to use Tailwind CSS in a Laravel project?', 'label' => 'Tailwind in Laravel'],
+                    ['prompt' => 'Create an animated loading spinner in CSS', 'label' => 'CSS Spinner'],
+                    ['prompt' => 'What is a polymorphic relationship in Laravel?', 'label' => 'Polymorphic Relations'],
+                    ['prompt' => 'Explain JavaScript Promises and Async/Await', 'label' => 'Async/Await in JS'],
+                    ['prompt' => 'How to write unit tests using PHPUnit?', 'label' => 'PHPUnit Testing'],
+                    ['prompt' => 'What is CORS and how to fix it?', 'label' => 'Fix CORS Error'],
+                    ['prompt' => 'Generate a standard .gitignore file for Laravel', 'label' => 'Laravel .gitignore']
+                ];
+                
+                shuffle($allSuggestions);
+                $suggestions = array_slice($allSuggestions, 0, 5);
+            @endphp
             <div class="suggestions-container" id="suggestionsContainer">
-                <button type="button" class="suggestion-btn" onclick="sendSuggestion('Write a Laravel controller for products')">Write a Laravel controller...</button>
-                <button type="button" class="suggestion-btn" onclick="sendSuggestion('How do I optimize database queries?')">How to optimize queries?</button>
-                <button type="button" class="suggestion-btn" onclick="sendSuggestion('Explain Eloquent relationships')">Explain Eloquent</button>
-                <button type="button" class="suggestion-btn" onclick="sendSuggestion('Generate a modern CSS button')">Generate CSS button</button>
+                @foreach($suggestions as $suggestion)
+                    <button type="button" class="suggestion-btn" onclick="sendSuggestion('{{ addslashes($suggestion['prompt']) }}')">{{ $suggestion['label'] }}</button>
+                @endforeach
             </div>
             @endif
             <form id="agentForm" class="input-pill-container">
