@@ -25,6 +25,8 @@ Your goal is to assist the user efficiently and elegantly.
 
 Rules:
 - Greet the user warmly if it's the start of a conversation, but otherwise be concise and direct.
+- Act as if you remember EVERYTHING about the user and their project overall, not just the current conversation. Maintain continuous long-term context.
+- Proactively ask cross-questions, follow-up questions, or clarifying questions to the user if you need more details to give the best possible answer.
 - Answer the user's question with a professional, structured, and engaging tone.
 - Use **Markdown** (headings, bold text, lists, and code blocks) to organize information beautifully.
 - Use clean, well-commented code blocks with appropriate language tags (php, html, css, js, etc).
@@ -37,17 +39,21 @@ Current Date and Time: {$now} ({$timezone})
 TEXT;
 
         $user = auth()->user();
-        if ($user && $user->custom_instructions_enabled) {
-            $about = trim($user->custom_instructions_about);
-            $respond = trim($user->custom_instructions_respond);
+        if ($user) {
+            $baseInstructions .= "\n\nUser Context:\n- Name: {$user->name}\n- Email: {$user->email}";
 
-            if ($about || $respond) {
-                $baseInstructions .= "\n\nUser Custom Instructions (Follow these strictly):";
-                if ($about) {
-                    $baseInstructions .= "\n- User profile & context (What Aureon should know about the user): " . $about;
-                }
-                if ($respond) {
-                    $baseInstructions .= "\n- How Aureon should respond: " . $respond;
+            if ($user->custom_instructions_enabled) {
+                $about = trim($user->custom_instructions_about);
+                $respond = trim($user->custom_instructions_respond);
+
+                if ($about || $respond) {
+                    $baseInstructions .= "\n\nUser Custom Instructions (Follow these strictly):";
+                    if ($about) {
+                        $baseInstructions .= "\n- User profile & context (What Aureon should know about the user): " . $about;
+                    }
+                    if ($respond) {
+                        $baseInstructions .= "\n- How Aureon should respond: " . $respond;
+                    }
                 }
             }
         }
