@@ -980,7 +980,7 @@
         <div class="popover-divider"></div>
         
         <!-- Upgrade Plan -->
-        <button class="popover-item" id="popoverUpgrade">
+        <button class="popover-item d-none" id="popoverUpgrade">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l1.912 5.886h6.188l-5.006 3.638 1.912 5.886-5.006-3.638-5.006 3.638 1.912-5.886-5.006-3.638h6.188z"/></svg>
                 <span>Upgrade plan</span>
@@ -988,7 +988,7 @@
         </button>
         
         <!-- Personalization -->
-        <button class="popover-item" id="popoverPersonalization">
+        <button class="popover-item d-none" id="popoverPersonalization">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16M8 3v6M16 9v6M10 15v6"/></svg>
                 <span>Personalization</span>
@@ -1004,7 +1004,7 @@
         </button>
         
         <!-- Settings -->
-        <button class="popover-item" id="popoverSettings">
+        <button class="popover-item d-none" id="popoverSettings">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 <span>Settings</span>
@@ -1299,7 +1299,7 @@
                 <div class="accordion accordion-flush mb-4" id="helpAccordion" style="--bs-accordion-bg: transparent; --bs-accordion-color: #ececec; --bs-accordion-btn-color: white; --bs-accordion-active-color: #f59e0b; --bs-accordion-active-bg: transparent; --bs-accordion-border-color: rgba(255,255,255,0.08);">
                     <div class="accordion-item border-secondary">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold" style="box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold text-white" style="box-shadow: none; background: transparent;" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
                                 What is Aureon?
                             </button>
                         </h2>
@@ -1311,7 +1311,7 @@
                     </div>
                     <div class="accordion-item border-secondary">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold" style="box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            <button class="accordion-button collapsed px-0 py-2 fs-6 fw-semibold text-white" style="box-shadow: none; background: transparent;" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
                                 How do I export my data?
                             </button>
                         </h2>
@@ -1326,15 +1326,15 @@
                 <h6 class="text-white fw-bold mb-2">Keyboard Shortcuts</h6>
                 <div class="d-flex flex-column gap-2 mb-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="small text-muted">New Chat Thread</span>
+                        <span class="small">New Chat Thread</span>
                         <kbd class="bg-secondary text-white font-monospace" style="font-size: 0.75rem; padding: 2px 6px; border-radius: 4px;">Ctrl + Shift + O</kbd>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="small text-muted">Submit Prompt</span>
+                        <span class="small">Submit Prompt</span>
                         <kbd class="bg-secondary text-white font-monospace" style="font-size: 0.75rem; padding: 2px 6px; border-radius: 4px;">Enter</kbd>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="small text-muted">Insert New Line</span>
+                        <span class="small">Insert New Line</span>
                         <kbd class="bg-secondary text-white font-monospace" style="font-size: 0.75rem; padding: 2px 6px; border-radius: 4px;">Shift + Enter</kbd>
                     </div>
                 </div>

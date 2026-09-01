@@ -21,7 +21,10 @@
 
         <div class="message-round ai-message animate-in">
             <div class="message-content">
-                <div class="message-label fs-5"></div>
+                <div class="message-label d-flex align-items-center gap-2 mb-1">
+                    <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                    <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
+                </div>
                 <div class="markdown-rendered message-text" data-raw-content="{{ $msg->response ?? '' }}">
                     {!! Str::markdown($msg->response ?? '') !!}
                 </div>
@@ -37,7 +40,10 @@
 
         <div id="loading" class="d-none message-round ai-message">
             <div class="message-content">
-                <div class="message-label">Aureon</div>
+                <div class="message-label d-flex align-items-center gap-2 mb-1">
+                    <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                    <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
+                </div>
                 <div class="d-flex gap-1 mt-2">
                     <div class="dot"></div>
                     <div class="dot" style="animation-delay: 0.2s"></div>
@@ -51,6 +57,14 @@
 
     <div class="chat-footer-wrapper">
         <div class="chat-footer-container">
+            @if($messages->isEmpty())
+            <div class="suggestions-container" id="suggestionsContainer">
+                <button type="button" class="suggestion-btn" onclick="sendSuggestion('Write a Laravel controller for products')">Write a Laravel controller...</button>
+                <button type="button" class="suggestion-btn" onclick="sendSuggestion('How do I optimize database queries?')">How to optimize queries?</button>
+                <button type="button" class="suggestion-btn" onclick="sendSuggestion('Explain Eloquent relationships')">Explain Eloquent</button>
+                <button type="button" class="suggestion-btn" onclick="sendSuggestion('Generate a modern CSS button')">Generate CSS button</button>
+            </div>
+            @endif
             <form id="agentForm" class="input-pill-container">
                 <input type="hidden" id="conversation_id" value="{{ $currentConversationId }}">
                 <textarea id="prompt" name="prompt" rows="1" placeholder="Ask anything..." class="pill-input"></textarea>
@@ -248,6 +262,28 @@
     .btn-pill-icon:hover { background: #353535; color: white; }
 
     .pill-actions { display: flex; align-items: center; gap: 4px; }
+    
+    .suggestions-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+        justify-content: center;
+    }
+    .suggestion-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #e2e8f0;
+        font-size: 0.85rem;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .suggestion-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+    }
 
     .btn-pill-send {
         width: 40px;
@@ -428,7 +464,10 @@
         const html = `
             <div class="message-round ai-message animate-in">
                 <div class="message-content">
-                    <div class="message-label">Aureon</div>
+                    <div class="message-label d-flex align-items-center gap-2 mb-1">
+                        <img src="/robo.png" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                        <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
+                    </div>
                     <div class="markdown-rendered message-text">${marked.parse(content)}</div>
                     <div class="message-meta mt-3 d-flex gap-3 op-50">
                         <button class="btn-icon copy-btn-individual" title="Copy">
@@ -478,6 +517,18 @@
         scrollToBottom();
     }
 
+    function sendSuggestion(text) {
+        const promptInput = document.getElementById('prompt');
+        promptInput.value = text;
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = false;
+        
+        const suggestions = document.getElementById('suggestionsContainer');
+        if (suggestions) suggestions.style.display = 'none';
+
+        document.getElementById('agentForm').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
+    }
+
     function addToSidebar(id, prompt) {
         const navGroup = document.querySelector('.sidebar-nav-container .nav-group');
         if (!navGroup) return;
@@ -522,6 +573,9 @@
 
         // Show user bubble immediately — visible during loading
         addUserBubble(prompt);
+        
+        const suggestions = document.getElementById('suggestionsContainer');
+        if (suggestions) suggestions.style.display = 'none';
 
         // Move loading indicator to the bottom so it appears after user's new message
         document.getElementById('chatResponseArea').appendChild(loading);
