@@ -159,9 +159,7 @@ class AgentController extends Controller
             \Illuminate\Support\Facades\Cache::put('prompt_interaction_' . $promptUuid, $interaction->id, now()->addMinutes(5));
         }
 
-        $content = array_values(array_filter(
-            preg_split("/\r\n|\r|\n/", trim((string) $response))
-        ));
+        $content = (string) $response;
 
         return response()->json([
             'status'          => true,

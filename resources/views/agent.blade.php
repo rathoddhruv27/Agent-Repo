@@ -25,9 +25,7 @@
                     <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
                     <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                 </div>
-                <div class="markdown-rendered message-text" data-raw-content="{{ $msg->response ?? '' }}">
-                    {!! Str::markdown($msg->response ?? '') !!}
-                </div>
+                <div class="markdown-rendered message-text" data-raw-content="{{ $msg->response ?? '' }}"></div>
                 
                 <div class="message-meta mt-3 d-flex gap-3 op-50">
                     <button class="btn-icon copy-btn-individual" title="Copy">
@@ -496,15 +494,20 @@
         gfm: true
     });
 
-    // Render initial server-side response if present
-    const responseContent = document.getElementById('responseContent');
-    if (responseContent) {
-        const rawInitial = responseContent.getAttribute('data-raw-content');
-        if (rawInitial) {
-            responseContent.innerHTML = marked.parse(rawInitial);
-            setTimeout(scrollToBottom, 100);
+    // Render initial server-side responses identically to real-time ones
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.markdown-rendered').forEach(el => {
+            const raw = el.getAttribute('data-raw-content');
+            if (raw) {
+                el.innerHTML = marked.parse(raw);
+            }
+        });
+        
+        if (window.enhanceCodeBlocks) {
+            window.enhanceCodeBlocks();
         }
-    }
+        setTimeout(scrollToBottom, 100);
+    });
 
     let currentAbortController = null;
     let currentPromptUuid = null;
