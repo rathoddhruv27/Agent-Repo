@@ -15,7 +15,12 @@
         <div class="message-round user-message animate-in">
             <div class="message-content user-content">
                 <div class="message-label text-end fs-5"></div>
-                <div class="message-text user-bubble">{{ $msg->prompt }}</div>
+                @if($msg->image_path)
+                    <img src="{{ Storage::url($msg->image_path) }}" style="max-width: 320px; max-height: 320px; border-radius: 14px; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: zoom-in; border: 1px solid rgba(255,255,255,0.05);" onclick="openFullscreenImage(this.src)">
+                @endif
+                <div class="message-text user-bubble">
+                    {{ $msg->prompt }}
+                </div>
             </div>
         </div>
 
@@ -109,30 +114,42 @@
                 @endforeach
             </div>
             @endif
-            <div id="imagePreviewContainer" class="d-none" style="margin-bottom: 10px; position: relative; display: inline-block;">
-                <img id="imagePreview" src="" alt="Preview" style="max-height: 80px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <button type="button" class="btn-remove-image" onclick="removeImage()" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
-            </div>
-            <form id="agentForm" class="input-pill-container">
+            <form id="agentForm" class="input-pill-container" style="flex-direction: column; border-radius: 26px; padding: 6px 12px; align-items: stretch; gap: 4px; background: #2f2f2f; border: none; transition: all 0.3s ease;">
                 <input type="hidden" id="conversation_id" value="{{ $currentConversationId }}">
                 <input type="file" id="imageInput" accept="image/*" class="d-none" onchange="previewImage(event)">
-                <button type="button" class="btn-pill-icon" onclick="document.getElementById('imageInput').click()" title="Attach image" style="background: none; border: none; color: #a1a1aa; cursor: pointer; padding: 4px;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                </button>
-                <textarea id="prompt" name="prompt" rows="1" placeholder="Ask anything..." class="pill-input"></textarea>
-                <div class="pill-actions">
-                    <!-- <button type="button" class="btn-pill-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></button> -->
-                    <button type="submit" id="submitBtn" class="btn-pill-send" disabled>
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+                
+                <div id="imagePreviewContainer" class="d-none" style="position: relative; width: max-content; margin-left: 12px; margin-top: 10px; margin-bottom: 2px;">
+                    <img id="imagePreview" src="" alt="Preview" style="max-height: 80px; max-width: 180px; width: auto; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); object-fit: contain; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer;" onclick="openFullscreenImage(this.src)">
+                    <button type="button" class="btn-remove-image" onclick="removeImage()" style="position: absolute; top: -8px; right: -8px; background: #3f3f46; color: white; border: 1px solid #52525b; border-radius: 50%; width: 22px; height: 22px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: background 0.2s; z-index: 2;" title="Remove image">&times;</button>
+                </div>
+
+                <div style="display: flex; align-items: flex-end; gap: 10px; width: 100%;">
+                    <button type="button" class="btn-pill-icon" onclick="document.getElementById('imageInput').click()" title="Attach image" style="background: none; border: none; color: #b4b4b5; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 3px; border-radius: 50%; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m-7-7h14"></path></svg>
                     </button>
-                    <button type="button" id="stopBtn" class="btn-pill-send d-none" onclick="stopGeneration()" title="Stop generating">
-                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><rect width="10" height="10" x="3" y="3" rx="2" ry="2"/></svg>
-                    </button>
+                    
+                    <textarea id="prompt" name="prompt" rows="1" placeholder="Ask anything..." class="pill-input" style="padding-top: 10px; padding-bottom: 10px; flex-grow: 1; align-self: center; background: transparent; border: none; color: white; outline: none; font-size: 1rem; resize: none; max-height: 150px;"></textarea>
+                    
+                    <div class="pill-actions" style="margin-bottom: 6px;">
+                        <button type="submit" id="submitBtn" class="btn-pill-send" disabled style="background: #ffffff; color: #000000; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: opacity 0.2s; margin-right: 4px;">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+                        </button>
+                        <button type="button" id="stopBtn" class="btn-pill-send d-none" onclick="stopGeneration()" title="Stop generating" style="background: #ffffff; color: #000000; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; margin-right: 4px;">
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><rect width="10" height="10" x="3" y="3" rx="2" ry="2"/></svg>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Fullscreen Image Modal -->
+<div id="imageFullscreenModal" class="d-none" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+    <button type="button" onclick="closeFullscreenImage()" style="position: absolute; top: 20px; right: 30px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">&times;</button>
+    <img id="fullscreenImageTarget" src="" style="max-width: 90%; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+</div>
+
 @endsection
 
 @section('styles')
@@ -207,17 +224,15 @@
         align-items: flex-end;
     }
     .user-bubble {
-        background: linear-gradient(135deg, #3a3a3a, #252525);
-        border-radius: 18px 18px 4px 18px;
-        padding: 12px 18px;
+        background: #2f2f2f;
+        border-radius: 24px;
+        padding: 10px 20px;
         max-width: 80%;
         width: fit-content;
         text-align: left;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
         white-space: pre-wrap;
         word-break: break-word;
+        color: #ececec;
     }
 
     .small-badge {
@@ -597,14 +612,15 @@
         let userHtml = `
             <div class="message-round user-message animate-in">
                 <div class="message-content user-content">
-                    <div class="message-label text-end fs-5"></div>
-                    <div class="message-text user-bubble">`;
+                    <div class="message-label text-end fs-5"></div>`;
                     
         if (currentImageBase64) {
-            userHtml += `<img src="${currentImageBase64}" style="max-height: 150px; border-radius: 8px; margin-bottom: 8px; display: block;">`;
+            userHtml += `<img src="${currentImageBase64}" style="max-width: 320px; max-height: 320px; border-radius: 14px; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: zoom-in; border: 1px solid rgba(255,255,255,0.05);" onclick="openFullscreenImage(this.src)">`;
+        } else if (window.uploadedImageUrl) {
+            userHtml += `<img src="${window.uploadedImageUrl}" style="max-width: 320px; max-height: 320px; border-radius: 14px; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: zoom-in; border: 1px solid rgba(255,255,255,0.05);" onclick="openFullscreenImage(this.src)">`;
         }
         
-        userHtml += `${safePrompt}</div>
+        userHtml += `<div class="message-text user-bubble">${safePrompt}</div>
                 </div>
             </div>`;
         
@@ -671,7 +687,9 @@
         let currentImageMime = window.uploadedImageMime || null;
 
         // Reset image input immediately
-        removeImage();
+        if (typeof removeImage === 'function') {
+            removeImage();
+        }
 
         // Setup abort controller for this request
         currentAbortController = new AbortController();
@@ -711,7 +729,7 @@
                     prompt: prompt,
                     conversation_id: conversation_id,
                     prompt_uuid: currentPromptUuid,
-                    image: currentImageBase64 ? { base64: currentImageBase64, mime: currentImageMime } : null
+                    image: window.uploadedImageUrl ? { url: window.uploadedImageUrl } : (currentImageBase64 ? { base64: currentImageBase64, mime: currentImageMime } : null)
                 }),
                 signal: signal
             });
@@ -763,7 +781,11 @@
     // Auto-resize textarea and toggle send button
     document.getElementById('prompt').addEventListener('input', function() {
         const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = this.value.trim() === '';
+        if(this.value.trim().length > 0 || window.uploadedImageBase64) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
         
         this.style.height = window.innerWidth <= 768 ? '40px' : '44px';
         this.style.height = (this.scrollHeight) + 'px';
@@ -872,6 +894,143 @@
             toast.remove();
         });
     }
+
+    // Image Upload Handling
+    window.uploadedImageBase64 = null;
+    window.uploadedImageMime = null;
+    window.uploadedImageUrl = null;
+
+    function previewImageUrl(url) {
+        const img = document.getElementById('imagePreview');
+        img.src = url;
+        document.getElementById('imagePreviewContainer').classList.remove('d-none');
+        
+        window.uploadedImageUrl = url;
+        window.uploadedImageBase64 = null;
+        window.uploadedImageMime = null;
+        
+        const submitBtn = document.getElementById('submitBtn');
+        if(submitBtn) submitBtn.disabled = false;
+    }
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('imagePreview');
+                img.src = e.target.result;
+                document.getElementById('imagePreviewContainer').classList.remove('d-none');
+                
+                window.uploadedImageBase64 = e.target.result;
+                window.uploadedImageMime = file.type;
+                document.getElementById('submitBtn').disabled = false;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeImage() {
+        const imageInput = document.getElementById('imageInput');
+        if (imageInput) imageInput.value = '';
+        
+        const imagePreview = document.getElementById('imagePreview');
+        if (imagePreview) imagePreview.src = '';
+        
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        if (previewContainer) previewContainer.classList.add('d-none');
+        
+        window.uploadedImageBase64 = null;
+        window.uploadedImageMime = null;
+        window.uploadedImageUrl = null;
+        
+        const promptText = document.getElementById('prompt').value;
+        const submitBtn = document.getElementById('submitBtn');
+        if(submitBtn) {
+            submitBtn.disabled = promptText.trim().length === 0;
+        }
+    }
+
+    // Fullscreen Image Logic
+    function openFullscreenImage(src) {
+        if (!src) return;
+        const modal = document.getElementById('imageFullscreenModal');
+        const img = document.getElementById('fullscreenImageTarget');
+        img.src = src;
+        modal.classList.remove('d-none');
+    }
+
+    function closeFullscreenImage() {
+        const modal = document.getElementById('imageFullscreenModal');
+        const img = document.getElementById('fullscreenImageTarget');
+        modal.classList.add('d-none');
+        img.src = '';
+    }
+
+
+    // Drag and Drop & Paste Support for Images
+    const agentForm = document.getElementById('agentForm');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        agentForm.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        agentForm.addEventListener(eventName, () => {
+            agentForm.style.borderColor = '#007bff';
+            agentForm.style.background = '#3a3a3a';
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        agentForm.addEventListener(eventName, () => {
+            agentForm.style.borderColor = 'rgba(255,255,255,0.1)';
+            agentForm.style.background = '#2f2f2f';
+        }, false);
+    });
+
+    agentForm.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            if (file.type.startsWith('image/')) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                document.getElementById('imageInput').files = dataTransfer.files;
+                previewImage({ target: { files: [file] } });
+                return;
+            }
+        }
+        
+        // Handle dragging an image from another webpage (which comes as text/html with an <img> tag)
+        const html = e.dataTransfer.getData('text/html');
+        if (html) {
+            const match = html.match(/<img[^>]+src="([^">]+)"/i);
+            if (match && match[1]) {
+                const url = match[1];
+                // Replace any HTML entities
+                const decodedUrl = url.replace(/&amp;/g, '&');
+                previewImageUrl(decodedUrl);
+                return;
+            }
+        }
+    });
+
+    document.addEventListener('paste', (e) => {
+        if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+            const file = e.clipboardData.files[0];
+            if (file.type.startsWith('image/')) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                document.getElementById('imageInput').files = dataTransfer.files;
+                previewImage({ target: { files: [file] } });
+            }
+        }
+    });
 
     // Show session toasts if any exist
     @if(session('success'))

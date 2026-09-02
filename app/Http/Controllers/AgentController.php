@@ -79,6 +79,22 @@ class AgentController extends Controller
             
             $imagePath = $filename;
             $attachments[] = new \Laravel\Ai\Files\LocalImage(storage_path('app/public/' . $imagePath), $mime);
+        } elseif ($request->has('image.url')) {
+            $url = $request->input('image.url');
+            try {
+                $imageResponse = \Illuminate\Support\Facades\Http::timeout(10)->get($url);
+                if ($imageResponse->successful()) {
+                    $mime = $imageResponse->header('Content-Type') ?: 'image/jpeg';
+                    $extension = explode('/', $mime)[1] ?? 'jpg';
+                    $filename = 'chat_images/' . Str::random(40) . '.' . $extension;
+                    
+                    \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $imageResponse->body());
+                    $imagePath = $filename;
+                    $attachments[] = new \Laravel\Ai\Files\LocalImage(storage_path('app/public/' . $imagePath), $mime);
+                }
+            } catch (\Exception $e) {
+                // Ignore download errors and just proceed without image
+            }
         }
 
         $availableAgents = [

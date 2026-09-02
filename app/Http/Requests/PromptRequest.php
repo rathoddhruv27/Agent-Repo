@@ -22,6 +22,7 @@ class PromptRequest extends FormRequest
             'image' => ['nullable', 'array'],
             'image.base64' => ['nullable', 'string'],
             'image.mime' => ['nullable', 'string'],
+            'image.url' => ['nullable', 'url'],
         ];
     }
 
