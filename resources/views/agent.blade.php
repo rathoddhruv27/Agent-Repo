@@ -4,25 +4,46 @@
 
 @section('content')
 <div class="chat-wrapper" style="position: relative;">
-    <!-- Premium Custom Model Selector -->
+    <!-- Premium Categorized Model Selector -->
     <div class="custom-model-dropdown" style="position: absolute; top: 16px; left: 24px; z-index: 10;">
         <button id="modelDropdownBtn" class="model-dropdown-btn">
             <span id="selectedModelText">✨ Auto (Smart Fallback)</span>
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
         </button>
         <div id="modelDropdownMenu" class="model-dropdown-menu d-none animate-in">
+            <!-- Auto Option -->
             <div class="model-option active" data-value="auto">
                 <div class="model-name">✨ Auto (Smart Fallback)</div>
                 <div class="model-desc">Dynamically routes to the best available model</div>
             </div>
-            @foreach($availableModels as $model)
-            <div class="model-option locked" style="opacity: 0.5; cursor: not-allowed;" title="Locked: Auto mode enforced">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <div class="model-name">{{ ucfirst($model['name']) }}</div>
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                </div>
-                <div class="model-desc">{{ $model['model'] }}</div>
+
+            @foreach($categorizedModels as $category)
+            <div class="model-category-header" style="border-left: 3px solid {{ $category['color'] }};">
+                <span class="category-icon">{{ $category['icon'] }}</span>
+                <span class="category-name">{{ $category['category'] }}</span>
             </div>
+            @foreach($category['models'] as $m)
+            <div class="model-option locked" 
+                 data-value="{{ $m['name'] }}:{{ $m['model'] }}" 
+                 data-provider="{{ $m['name'] }}" 
+                 data-model="{{ $m['model'] }}"
+                 data-label="{{ $m['label'] }}"
+                 style="opacity: 0.5; cursor: not-allowed; padding-left: 24px;" 
+                 title="Locked: Auto mode enforced">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div>
+                        <div class="model-name" style="font-size: 0.9rem;">{{ $m['label'] }}</div>
+                        <div class="model-desc" style="font-size: 0.72rem;">{{ $m['desc'] }}</div>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        @if(!empty($m['coming_soon']))
+                            <span style="font-size: 0.6rem; background: rgba(239,68,68,0.2); color: #f87171; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SOON</span>
+                        @endif
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </div>
+                </div>
+            </div>
+            @endforeach
             @endforeach
         </div>
         <input type="hidden" id="modelSelection" value="auto">
@@ -53,13 +74,13 @@
                 </div>
                 <div class="markdown-rendered message-text" data-raw-content="{{ $msg->response ?? '' }}"></div>
                 
-                <div class="message-meta mt-3 d-flex gap-3 op-50">
-                    <button class="btn-icon copy-btn-individual" title="Copy" style="color: white;">
-                        <svg width="14" height="14" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <div class="message-meta mt-3 d-flex gap-3 align-items-center">
+                    <button class="btn-icon copy-btn-individual" title="Copy" style="color: #b4b4b4; transition: color 0.2s; padding: 0;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#b4b4b4'">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </button>
                     @if($msg->agent && $msg->model)
-                        <span class="small-badge" style="display: flex; align-items: center; gap: 4px; color: white">
-                            <svg width="12" height="12" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span class="small-badge" style="display: flex; align-items: center; gap: 4px; color: #b4b4b4; opacity: 0.8;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             {{ ucfirst($msg->agent) }} ({{ $msg->model }})
                         </span>
                     @endif
@@ -316,19 +337,41 @@
         top: 100%;
         left: 0;
         margin-top: 8px;
-        background: #2f2f2f;
+        background: #1e1e1e;
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 16px;
         padding: 8px;
-        width: 320px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        width: 360px;
+        max-height: 70vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 2px;
         z-index: 100;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.1) transparent;
     }
+    .model-dropdown-menu::-webkit-scrollbar { width: 4px; }
+    .model-dropdown-menu::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    .model-category-header {
+        padding: 8px 12px;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #a1a1aa;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 6px;
+        background: rgba(255,255,255,0.02);
+    }
+    .model-category-header .category-icon { font-size: 0.85rem; }
+    .model-category-header .category-name { flex: 1; }
     .model-option {
-        padding: 10px 14px;
+        padding: 8px 14px;
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.2s;
@@ -349,7 +392,7 @@
     .model-option .model-desc {
         font-size: 0.8rem;
         color: #a1a1aa;
-        margin-top: 3px;
+        margin-top: 2px;
     }
         color: #b4b4b4;
         cursor: pointer;
@@ -668,15 +711,15 @@
         const content = Array.isArray(rawContent) ? rawContent.join('\n\n') : rawContent;
         
         let metaHtml = `
-                    <div class="message-meta mt-3 d-flex gap-3 op-50">
-                        <button class="btn-icon copy-btn-individual" title="Copy">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <div class="message-meta mt-3 d-flex gap-3 align-items-center">
+                        <button class="btn-icon copy-btn-individual" title="Copy" style="color: #b4b4b4; transition: color 0.2s; padding: 0;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#b4b4b4'">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>`;
         
         if (agent && model) {
             const capitalizedAgent = agent.charAt(0).toUpperCase() + agent.slice(1);
             metaHtml += `
-                        <span class="small-badge" style="display: flex; align-items: center; gap: 4px;">
+                        <span class="small-badge" style="display: flex; align-items: center; gap: 4px; color: #b4b4b4; opacity: 0.8;">
                             <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             ${capitalizedAgent} (${model})
                         </span>`;

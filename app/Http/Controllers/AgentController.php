@@ -14,34 +14,112 @@ use App\Models\Agent;
 
 class AgentController extends Controller
 {
-    private function getAvailableAgents()
+    /**
+     * Get all models organized by category for the dropdown UI.
+     */
+    private function getCategorizedModels(): array
     {
         return [
             [
-                'name' => 'anthropic',
-                'provider' => Lab::Anthropic,
-                'model' => 'claude-3-5-sonnet-20240620',
+                'category' => 'Chat & Q&A',
+                'icon' => '💬',
+                'color' => '#3b82f6',
+                'models' => [
+                    ['name' => 'anthropic', 'provider' => Lab::Anthropic, 'model' => 'claude-3-5-sonnet-20240620', 'label' => 'Claude 3.5 Sonnet', 'desc' => 'Anthropic\'s most intelligent model', 'vision' => true],
+                    ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-2.5-flash', 'label' => 'Gemini 2.5 Flash', 'desc' => 'Google\'s fast multimodal model', 'vision' => true],
+                    ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'gpt-4o-mini', 'label' => 'GPT-4o Mini', 'desc' => 'OpenAI\'s efficient flagship', 'vision' => true],
+                    ['name' => 'groq', 'provider' => Lab::Groq, 'model' => 'qwen/qwen3.6-27b', 'label' => 'Qwen 3.6 27B', 'desc' => 'Ultra-fast via Groq inference', 'vision' => false],
+                    ['name' => 'deepseek', 'provider' => Lab::DeepSeek, 'model' => 'deepseek-chat', 'label' => 'DeepSeek Chat', 'desc' => 'Cost-effective reasoning model', 'vision' => false],
+                ],
             ],
             [
-                'name' => 'gemini',
-                'provider' => Lab::Gemini,
-                'model' => 'gemini-2.5-flash',
+                'category' => 'Coding & Development',
+                'icon' => '💻',
+                'color' => '#10b981',
+                'models' => [
+                    ['name' => 'anthropic', 'provider' => Lab::Anthropic, 'model' => 'claude-3-5-sonnet-20240620', 'label' => 'Claude Code', 'desc' => 'Best-in-class code generation', 'vision' => true],
+                    ['name' => 'deepseek', 'provider' => Lab::DeepSeek, 'model' => 'deepseek-coder', 'label' => 'DeepSeek Coder', 'desc' => 'Specialized coding model', 'vision' => false],
+                    ['name' => 'groq', 'provider' => Lab::Groq, 'model' => 'llama-3.3-70b-versatile', 'label' => 'Llama 3.3 70B', 'desc' => 'Meta\'s open-source powerhouse', 'vision' => false],
+                ],
             ],
             [
-                'name' => 'openai',
-                'provider' => Lab::OpenAI,
-                'model' => 'gpt-4o-mini',
+                'category' => 'Image Generation',
+                'icon' => '🎨',
+                'color' => '#8b5cf6',
+                'models' => [
+                    ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'dall-e-3', 'label' => 'DALL·E 3', 'desc' => 'OpenAI image generation', 'vision' => false, 'type' => 'image'],
+                    ['name' => 'pollinations', 'provider' => null, 'model' => 'flux', 'label' => 'Flux (Pollinations)', 'desc' => 'Free high-quality image gen', 'vision' => false, 'type' => 'image'],
+                    ['name' => 'pollinations', 'provider' => null, 'model' => 'stable-diffusion', 'label' => 'Stable Diffusion XL', 'desc' => 'Open-source image generation', 'vision' => false, 'type' => 'image'],
+                ],
             ],
             [
-                'name' => 'groq',
-                'provider' => Lab::Groq,
-                'model' => 'qwen/qwen3.6-27b',
+                'category' => 'Reasoning & Analysis',
+                'icon' => '🧠',
+                'color' => '#06b6d4',
+                'models' => [
+                    ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'o4-mini', 'label' => 'OpenAI o4-mini', 'desc' => 'Advanced reasoning model', 'vision' => false],
+                    ['name' => 'deepseek', 'provider' => Lab::DeepSeek, 'model' => 'deepseek-reasoner', 'label' => 'DeepSeek R1', 'desc' => 'Chain-of-thought reasoning', 'vision' => false],
+                    ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-2.5-flash-thinking', 'label' => 'Gemini Thinking', 'desc' => 'Google\'s reasoning model', 'vision' => true],
+                ],
             ],
             [
-                'name' => 'deepseek',
-                'provider' => Lab::DeepSeek,
-                'model' => 'deepseek-chat',
+                'category' => 'Research & Web Search',
+                'icon' => '🔍',
+                'color' => '#eab308',
+                'models' => [
+                    ['name' => 'groq', 'provider' => Lab::Groq, 'model' => 'llama-3.3-70b-versatile', 'label' => 'Llama Search', 'desc' => 'Fast web-augmented search', 'vision' => false],
+                    ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-2.5-flash', 'label' => 'Gemini Search', 'desc' => 'Google-powered search AI', 'vision' => true],
+                ],
             ],
+            [
+                'category' => 'Multimodal',
+                'icon' => '🌐',
+                'color' => '#14b8a6',
+                'models' => [
+                    ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'gpt-4o', 'label' => 'GPT-4o', 'desc' => 'OpenAI\'s best multimodal model', 'vision' => true],
+                    ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-2.5-pro', 'label' => 'Gemini 2.5 Pro', 'desc' => 'Google\'s most capable model', 'vision' => true],
+                    ['name' => 'anthropic', 'provider' => Lab::Anthropic, 'model' => 'claude-3-5-sonnet-20240620', 'label' => 'Claude 3.5 Vision', 'desc' => 'Anthropic multimodal', 'vision' => true],
+                ],
+            ],
+            [
+                'category' => 'Audio & Speech',
+                'icon' => '🎵',
+                'color' => '#f97316',
+                'models' => [
+                    ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'gpt-4o-mini', 'label' => 'Whisper (via GPT)', 'desc' => 'Speech-to-text transcription', 'vision' => false],
+                ],
+            ],
+            [
+                'category' => 'Video Generation',
+                'icon' => '🎬',
+                'color' => '#ef4444',
+                'models' => [
+                    ['name' => 'pollinations', 'provider' => null, 'model' => 'sora-placeholder', 'label' => 'Sora (Coming Soon)', 'desc' => 'OpenAI video generation', 'vision' => false, 'type' => 'video', 'coming_soon' => true],
+                ],
+            ],
+            [
+                'category' => 'Data Analysis',
+                'icon' => '📊',
+                'color' => '#ec4899',
+                'models' => [
+                    ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'gpt-4o-mini', 'label' => 'Code Interpreter', 'desc' => 'Data analysis & visualization', 'vision' => false],
+                    ['name' => 'deepseek', 'provider' => Lab::DeepSeek, 'model' => 'deepseek-chat', 'label' => 'DeepSeek Analyst', 'desc' => 'Structured data reasoning', 'vision' => false],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get all chat-capable agents as a flat array for the fallback engine.
+     */
+    private function getAvailableAgents(): array
+    {
+        return [
+            ['name' => 'anthropic', 'provider' => Lab::Anthropic, 'model' => 'claude-3-5-sonnet-20240620'],
+            ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-2.5-flash'],
+            ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'gpt-4o-mini'],
+            ['name' => 'groq', 'provider' => Lab::Groq, 'model' => 'qwen/qwen3.6-27b'],
+            ['name' => 'deepseek', 'provider' => Lab::DeepSeek, 'model' => 'deepseek-chat'],
         ];
     }
 
@@ -84,8 +162,9 @@ class AgentController extends Controller
         }
         
         $availableModels = $this->getAvailableAgents();
+        $categorizedModels = $this->getCategorizedModels();
 
-        return view('agent', compact('messages', 'agents', 'currentConversationId', 'availableModels'));
+        return view('agent', compact('messages', 'agents', 'currentConversationId', 'availableModels', 'categorizedModels'));
     }
 
     public function ask(PromptRequest $request)
