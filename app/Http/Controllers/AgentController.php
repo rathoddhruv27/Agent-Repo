@@ -65,6 +65,21 @@ class AgentController extends Controller
         $response = null;
         $usedProvider = null;
         $usedModel = null;
+        
+        $imagePath = null;
+        $attachments = [];
+        
+        if ($request->has('image.base64')) {
+            $base64Data = preg_replace('#^data:image/\w+;base64,#i', '', $request->input('image.base64'));
+            $mime = $request->input('image.mime', 'image/jpeg');
+            $extension = explode('/', $mime)[1] ?? 'jpg';
+            
+            $filename = 'chat_images/' . Str::random(40) . '.' . $extension;
+            \Illuminate\Support\Facades\Storage::disk('public')->put($filename, base64_decode($base64Data));
+            
+            $imagePath = $filename;
+            $attachments[] = new \Laravel\Ai\Files\LocalImage(storage_path('app/public/' . $imagePath), $mime);
+        }
 
         $availableAgents = [
             [
@@ -93,6 +108,16 @@ class AgentController extends Controller
                 'model' => 'deepseek-chat',
             ],
         ];
+        
+        if ($imagePath) {
+            $availableAgents = array_values(array_filter($availableAgents, fn($a) => in_array($a['name'], ['anthropic', 'gemini', 'openai'])));
+            if (empty($availableAgents)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No vision-capable AI models are configured.',
+                ], 400);
+            }
+        }
 
         shuffle($availableAgents);
 
@@ -110,6 +135,7 @@ class AgentController extends Controller
 
                 $response = $agent->prompt(
                     $prompt,
+                    attachments: $attachments,
                     provider: $provider,
                     model: $model
                 );
@@ -145,6 +171,7 @@ class AgentController extends Controller
             'agent'           => $usedProvider,
             'model'           => $usedModel,
             'time'            => round(microtime(true) - $start, 3) . ' Seconds',
+            'image_path'      => $imagePath,
         ]);
 
         if ($promptUuid = $request->input('prompt_uuid')) {

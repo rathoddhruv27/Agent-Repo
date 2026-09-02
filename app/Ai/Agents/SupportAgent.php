@@ -70,12 +70,6 @@ TEXT;
         ];
     }
 
-    // #[Timeout(10)]
-    // public function timeout(): int
-    // {
-    //     return 10;
-    // }
-
     /**
      * Get the list of messages comprising the conversation so far.
      */
@@ -92,7 +86,11 @@ TEXT;
 
         $messages = [];
         foreach ($history as $interaction) {
-            $messages[] = new UserMessage($interaction->prompt);
+            $attachments = [];
+            if ($interaction->image_path && file_exists(storage_path('app/public/' . $interaction->image_path))) {
+                $attachments[] = new \Laravel\Ai\Files\LocalImage(storage_path('app/public/' . $interaction->image_path));
+            }
+            $messages[] = new UserMessage($interaction->prompt, $attachments);
             $messages[] = new AssistantMessage($interaction->response);
         }
 

@@ -109,8 +109,16 @@
                 @endforeach
             </div>
             @endif
+            <div id="imagePreviewContainer" class="d-none" style="margin-bottom: 10px; position: relative; display: inline-block;">
+                <img id="imagePreview" src="" alt="Preview" style="max-height: 80px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <button type="button" class="btn-remove-image" onclick="removeImage()" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
+            </div>
             <form id="agentForm" class="input-pill-container">
                 <input type="hidden" id="conversation_id" value="{{ $currentConversationId }}">
+                <input type="file" id="imageInput" accept="image/*" class="d-none" onchange="previewImage(event)">
+                <button type="button" class="btn-pill-icon" onclick="document.getElementById('imageInput').click()" title="Attach image" style="background: none; border: none; color: #a1a1aa; cursor: pointer; padding: 4px;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                </button>
                 <textarea id="prompt" name="prompt" rows="1" placeholder="Ask anything..." class="pill-input"></textarea>
                 <div class="pill-actions">
                     <!-- <button type="button" class="btn-pill-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></button> -->
@@ -579,20 +587,28 @@
         }
     }
 
-    function addUserBubble(prompt) {
+    function addUserBubble(prompt, currentImageBase64 = null) {
         const container = document.getElementById('chatResponseArea');
         
         const welcome = document.querySelector('.welcome-container');
         if (welcome) welcome.remove();
 
         const safePrompt = prompt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        container.insertAdjacentHTML('beforeend', `
+        let userHtml = `
             <div class="message-round user-message animate-in">
                 <div class="message-content user-content">
                     <div class="message-label text-end fs-5"></div>
-                    <div class="message-text user-bubble">${safePrompt}</div>
+                    <div class="message-text user-bubble">`;
+                    
+        if (currentImageBase64) {
+            userHtml += `<img src="${currentImageBase64}" style="max-height: 150px; border-radius: 8px; margin-bottom: 8px; display: block;">`;
+        }
+        
+        userHtml += `${safePrompt}</div>
                 </div>
-            </div>`);
+            </div>`;
+        
+        container.insertAdjacentHTML('beforeend', userHtml);
         scrollToBottom();
     }
 
@@ -649,7 +665,13 @@
         const submitBtn = document.getElementById('submitBtn');
         const stopBtn = document.getElementById('stopBtn');
 
-        if (!prompt) return;
+        if (!prompt && !window.uploadedImageBase64) return;
+
+        let currentImageBase64 = window.uploadedImageBase64 || null;
+        let currentImageMime = window.uploadedImageMime || null;
+
+        // Reset image input immediately
+        removeImage();
 
         // Setup abort controller for this request
         currentAbortController = new AbortController();
@@ -657,7 +679,7 @@
         const signal = currentAbortController.signal;
 
         // Show user bubble immediately — visible during loading
-        addUserBubble(prompt);
+        addUserBubble(prompt, currentImageBase64);
         
         const suggestions = document.getElementById('suggestionsContainer');
         if (suggestions) suggestions.style.display = 'none';
@@ -688,7 +710,8 @@
                 body: JSON.stringify({ 
                     prompt: prompt,
                     conversation_id: conversation_id,
-                    prompt_uuid: currentPromptUuid
+                    prompt_uuid: currentPromptUuid,
+                    image: currentImageBase64 ? { base64: currentImageBase64, mime: currentImageMime } : null
                 }),
                 signal: signal
             });
