@@ -3,8 +3,31 @@
 @section('title', 'Agent - Aureon')
 
 @section('content')
-<div class="chat-wrapper">
-    <div id="chatResponseArea" class="chat-column">
+<div class="chat-wrapper" style="position: relative;">
+    <!-- Premium Custom Model Selector -->
+    <div class="custom-model-dropdown" style="position: absolute; top: 16px; left: 24px; z-index: 10;">
+        <button id="modelDropdownBtn" class="model-dropdown-btn">
+            <span id="selectedModelText">✨ Auto (Smart Fallback)</span>
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div id="modelDropdownMenu" class="model-dropdown-menu d-none animate-in">
+            <div class="model-option active" data-value="auto">
+                <div class="model-name">✨ Auto (Smart Fallback)</div>
+                <div class="model-desc">Dynamically routes to the best available model</div>
+            </div>
+            @foreach($availableModels as $model)
+            <div class="model-option locked" style="opacity: 0.5; cursor: not-allowed;" title="Locked: Auto mode enforced">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="model-name">{{ ucfirst($model['name']) }}</div>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <div class="model-desc">{{ $model['model'] }}</div>
+            </div>
+            @endforeach
+        </div>
+        <input type="hidden" id="modelSelection" value="auto">
+    </div>
+    <div id="chatResponseArea" class="chat-column" style="padding-top: 60px;">
         @if($messages->isEmpty())
         <div class="welcome-container animate-in">
             <h1 class="welcome-title text-white">Good to see you, {{ explode(' ', Auth::user()->name)[0] }}</h1>
@@ -18,9 +41,7 @@
                 @if($msg->image_path)
                     <img src="{{ Storage::url($msg->image_path) }}" style="max-width: 320px; max-height: 320px; border-radius: 14px; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: zoom-in; border: 1px solid rgba(255,255,255,0.05);" onclick="openFullscreenImage(this.src)">
                 @endif
-                <div class="message-text user-bubble">
-                    {{ $msg->prompt }}
-                </div>
+                <div class="message-text user-bubble">{{ $msg->prompt }}</div>
             </div>
         </div>
 
@@ -33,9 +54,15 @@
                 <div class="markdown-rendered message-text" data-raw-content="{{ $msg->response ?? '' }}"></div>
                 
                 <div class="message-meta mt-3 d-flex gap-3 op-50">
-                    <button class="btn-icon copy-btn-individual" title="Copy">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <button class="btn-icon copy-btn-individual" title="Copy" style="color: white;">
+                        <svg width="14" height="14" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </button>
+                    @if($msg->agent && $msg->model)
+                        <span class="small-badge" style="display: flex; align-items: center; gap: 4px; color: white">
+                            <svg width="12" height="12" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            {{ ucfirst($msg->agent) }} ({{ $msg->model }})
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>
@@ -248,6 +275,66 @@
     .btn-icon {
         background: transparent;
         border: none;
+    }
+    
+    /* Custom Premium Dropdown */
+    .model-dropdown-btn {
+        background: transparent;
+        color: #ececec;
+        border: none;
+        font-size: 1.15rem;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s;
+    }
+    .model-dropdown-btn:hover {
+        background: rgba(255,255,255,0.08);
+    }
+    .model-dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 8px;
+        background: #2f2f2f;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        padding: 8px;
+        width: 320px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        z-index: 100;
+    }
+    .model-option {
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+    .model-option:hover {
+        background: rgba(255,255,255,0.05);
+    }
+    .model-option.active {
+        background: rgba(37, 99, 235, 0.15);
+        border: 1px solid rgba(37, 99, 235, 0.4);
+    }
+    .model-option .model-name {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #fff;
+    }
+    .model-option .model-desc {
+        font-size: 0.8rem;
+        color: #a1a1aa;
+        margin-top: 3px;
+    }
         color: #b4b4b4;
         cursor: pointer;
         padding: 0;
@@ -560,9 +647,27 @@
     }
 
     // Only inserts the AI response — user bubble is added immediately on submit
-    function appendAiResponse(rawContent) {
+    function appendAiResponse(rawContent, agent = null, model = null) {
         const container = document.getElementById('chatResponseArea');
         const content = Array.isArray(rawContent) ? rawContent.join('\n\n') : rawContent;
+        
+        let metaHtml = `
+                    <div class="message-meta mt-3 d-flex gap-3 op-50">
+                        <button class="btn-icon copy-btn-individual" title="Copy">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>`;
+        
+        if (agent && model) {
+            const capitalizedAgent = agent.charAt(0).toUpperCase() + agent.slice(1);
+            metaHtml += `
+                        <span class="small-badge" style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            ${capitalizedAgent} (${model})
+                        </span>`;
+        }
+        
+        metaHtml += `</div>`;
+
         const html = `
             <div class="message-round ai-message animate-in">
                 <div class="message-content">
@@ -571,11 +676,7 @@
                         <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                     </div>
                     <div class="markdown-rendered message-text">${marked.parse(content)}</div>
-                    <div class="message-meta mt-3 d-flex gap-3 op-50">
-                        <button class="btn-icon copy-btn-individual" title="Copy">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
-                    </div>
+                    ${metaHtml}
                 </div>
             </div>`;
         container.insertAdjacentHTML('beforeend', html);
@@ -729,7 +830,8 @@
                     prompt: prompt,
                     conversation_id: conversation_id,
                     prompt_uuid: currentPromptUuid,
-                    image: window.uploadedImageUrl ? { url: window.uploadedImageUrl } : (currentImageBase64 ? { base64: currentImageBase64, mime: currentImageMime } : null)
+                    image: window.uploadedImageUrl ? { url: window.uploadedImageUrl } : (currentImageBase64 ? { base64: currentImageBase64, mime: currentImageMime } : null),
+                    model_selection: document.getElementById('modelSelection').value
                 }),
                 signal: signal
             });
@@ -743,7 +845,7 @@
             currentAbortController = null;
 
             if (result.status) {
-                appendAiResponse(result.data.content);
+                appendAiResponse(result.data.content, result.agent, result.model);
                 
                 // Update URL and conversation state
                 if (result.conversation_id) {
@@ -799,25 +901,10 @@
         }
     });
 
-    // Sidebar AJAX loading
+    // Let sidebar links navigate naturally
     document.querySelectorAll('.nav-sub-link').forEach(link => {
-        link.addEventListener('click', async function(e) {
-            if (window.location.pathname !== '/agent') return; 
-            
-            e.preventDefault();
-            const url = this.getAttribute('href');
-            
-            try {
-                const response = await fetch(url, {
-                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
-                });
-                const result = await response.json();
-                if (result.status) {
-                    appendInteraction(result.data.prompt, result.data.response, result.data.agent, result.data.model, result.data.time);
-                }
-            } catch (err) {
-                console.error('Failed to load history:', err);
-            }
+        link.addEventListener('click', function(e) {
+            // Normal navigation applies.
         });
     });
 
@@ -1022,15 +1109,51 @@
 
     document.addEventListener('paste', (e) => {
         if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
-            const file = e.clipboardData.files[0];
-            if (file.type.startsWith('image/')) {
+            const files = Array.from(e.clipboardData.files).filter(f => f.type.startsWith('image/'));
+            if (files.length > 0) {
                 const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
+                files.forEach(f => dataTransfer.items.add(f));
                 document.getElementById('imageInput').files = dataTransfer.files;
-                previewImage({ target: { files: [file] } });
+                previewImage({ target: { files: dataTransfer.files } });
             }
         }
     });
+
+    // Custom Premium Dropdown Logic
+    const dropdownBtn = document.getElementById('modelDropdownBtn');
+    const dropdownMenu = document.getElementById('modelDropdownMenu');
+    const dropdownInput = document.getElementById('modelSelection');
+    const dropdownText = document.getElementById('selectedModelText');
+    
+    if (dropdownBtn && dropdownMenu) {
+        dropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('d-none');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!dropdownMenu.contains(e.target) && !dropdownBtn.contains(e.target)) {
+                dropdownMenu.classList.add('d-none');
+            }
+        });
+        
+        document.querySelectorAll('.model-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                if (option.classList.contains('locked')) return;
+                
+                const value = option.getAttribute('data-value');
+                const name = option.querySelector('.model-name').innerText;
+                
+                dropdownInput.value = value;
+                dropdownText.innerText = name;
+                
+                document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                dropdownMenu.classList.add('d-none');
+            });
+        });
+    }
 
     // Show session toasts if any exist
     @if(session('success'))

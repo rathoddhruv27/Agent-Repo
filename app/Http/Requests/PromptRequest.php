@@ -19,10 +19,11 @@ class PromptRequest extends FormRequest
     {
         return [
             'prompt' => ['required', 'string'],
-            'image' => ['nullable', 'array'],
-            'image.base64' => ['nullable', 'string'],
-            'image.mime' => ['nullable', 'string'],
-            'image.url' => ['nullable', 'url'],
+            'images' => ['nullable', 'array', 'max:5'],
+            'images.*.base64' => ['nullable', 'string'],
+            'images.*.mime' => ['nullable', 'string'],
+            'images.*.url' => ['nullable', 'url'],
+            'model_selection' => ['nullable', 'string'],
         ];
     }
 

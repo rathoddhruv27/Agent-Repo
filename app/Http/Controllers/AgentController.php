@@ -14,6 +14,37 @@ use App\Models\Agent;
 
 class AgentController extends Controller
 {
+    private function getAvailableAgents()
+    {
+        return [
+            [
+                'name' => 'anthropic',
+                'provider' => Lab::Anthropic,
+                'model' => 'claude-3-5-sonnet-20240620',
+            ],
+            [
+                'name' => 'gemini',
+                'provider' => Lab::Gemini,
+                'model' => 'gemini-2.5-flash',
+            ],
+            [
+                'name' => 'openai',
+                'provider' => Lab::OpenAI,
+                'model' => 'gpt-4o-mini',
+            ],
+            [
+                'name' => 'groq',
+                'provider' => Lab::Groq,
+                'model' => 'qwen/qwen3.6-27b',
+            ],
+            [
+                'name' => 'deepseek',
+                'provider' => Lab::DeepSeek,
+                'model' => 'deepseek-chat',
+            ],
+        ];
+    }
+
     public function agent(Request $request, $id = null) {
         if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'profile_image')) {
             \Illuminate\Support\Facades\Schema::table('users', function ($table) {
@@ -52,7 +83,9 @@ class AgentController extends Controller
             }
         }
         
-        return view('agent', compact('messages', 'agents', 'currentConversationId'));
+        $availableModels = $this->getAvailableAgents();
+
+        return view('agent', compact('messages', 'agents', 'currentConversationId', 'availableModels'));
     }
 
     public function ask(PromptRequest $request)
@@ -96,34 +129,15 @@ class AgentController extends Controller
                 // Ignore download errors and just proceed without image
             }
         }
-
-        $availableAgents = [
-            [
-                'name' => 'anthropic',
-                'provider' => Lab::Anthropic,
-                'model' => 'claude-3-5-sonnet-20240620',
-            ],
-            [
-                'name' => 'gemini',
-                'provider' => Lab::Gemini,
-                'model' => 'gemini-2.5-flash',
-            ],
-            [
-                'name' => 'openai',
-                'provider' => Lab::OpenAI,
-                'model' => 'gpt-4o-mini',
-            ],
-            [
-                'name' => 'groq',
-                'provider' => Lab::Groq,
-                'model' => 'llama-3.3-70b-versatile',
-            ],
-            [
-                'name' => 'deepseek',
-                'provider' => Lab::DeepSeek,
-                'model' => 'deepseek-chat',
-            ],
-        ];
+        $availableAgents = $this->getAvailableAgents();
+        
+        if ($request->has('model_selection') && $request->input('model_selection') !== 'auto') {
+            $selectedName = $request->input('model_selection');
+            $filtered = array_filter($availableAgents, fn($a) => $a['name'] === $selectedName);
+            if (!empty($filtered)) {
+                $availableAgents = array_values($filtered);
+            }
+        }
         
         if ($imagePath) {
             $availableAgents = array_values(array_filter($availableAgents, fn($a) => in_array($a['name'], ['anthropic', 'gemini', 'openai'])));

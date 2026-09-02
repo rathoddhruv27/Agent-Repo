@@ -67,6 +67,7 @@ TEXT;
         return [
             new \App\Ai\Tools\GetLaravelTipsTool(),
             new \App\Ai\Tools\SearchWebTool(),
+            new \App\Ai\Tools\SearchWikipediaTool(),
         ];
     }
 
