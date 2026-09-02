@@ -147,6 +147,18 @@ class AgentController extends Controller
             'time'            => round(microtime(true) - $start, 3) . ' Seconds',
         ]);
 
+        if ($promptUuid = $request->input('prompt_uuid')) {
+            if (\Illuminate\Support\Facades\Cache::has('stop_prompt_' . $promptUuid)) {
+                $interaction->delete();
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Generation stopped by user.',
+                ]);
+            }
+            // Store the interaction ID just in case the stop request arrives a moment later
+            \Illuminate\Support\Facades\Cache::put('prompt_interaction_' . $promptUuid, $interaction->id, now()->addMinutes(5));
+        }
+
         $content = array_values(array_filter(
             preg_split("/\r\n|\r|\n/", trim((string) $response))
         ));

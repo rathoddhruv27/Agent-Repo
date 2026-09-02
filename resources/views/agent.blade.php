@@ -119,6 +119,9 @@
                     <button type="submit" id="submitBtn" class="btn-pill-send" disabled>
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
                     </button>
+                    <button type="button" id="stopBtn" class="btn-pill-send d-none" onclick="stopGeneration()" title="Stop generating">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><rect width="10" height="10" x="3" y="3" rx="2" ry="2"/></svg>
+                    </button>
                 </div>
             </form>
         </div>
@@ -503,6 +506,28 @@
         }
     }
 
+    let currentAbortController = null;
+    let currentPromptUuid = null;
+
+    function stopGeneration() {
+        if (currentAbortController) {
+            currentAbortController.abort();
+            currentAbortController = null;
+            
+            if (currentPromptUuid) {
+                fetch('/agent/stop', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ prompt_uuid: currentPromptUuid })
+                }).catch(e => console.log(e));
+                currentPromptUuid = null;
+            }
+        }
+    }
+
     function scrollToBottom() {
         const container = document.getElementById('chatResponseArea');
         container.scrollTop = container.scrollHeight;
@@ -516,7 +541,7 @@
             <div class="message-round ai-message animate-in">
                 <div class="message-content">
                     <div class="message-label d-flex align-items-center gap-2 mb-1">
-                        <img src="/robo.png" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                        <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
                         <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                     </div>
                     <div class="markdown-rendered message-text">${marked.parse(content)}</div>
@@ -619,8 +644,14 @@
         const prompt = promptInput.value.trim();
         const loading = document.getElementById('loading');
         const submitBtn = document.getElementById('submitBtn');
+        const stopBtn = document.getElementById('stopBtn');
 
         if (!prompt) return;
+
+        // Setup abort controller for this request
+        currentAbortController = new AbortController();
+        currentPromptUuid = crypto.randomUUID();
+        const signal = currentAbortController.signal;
 
         // Show user bubble immediately — visible during loading
         addUserBubble(prompt);
@@ -636,7 +667,9 @@
         // Clear input immediately
         promptInput.value = '';
         promptInput.style.height = window.innerWidth <= 768 ? '40px' : '44px';
-        submitBtn.disabled = true; // Disable button after send
+        submitBtn.disabled = true;
+        submitBtn.classList.add('d-none');
+        stopBtn.classList.remove('d-none');
         
         scrollToBottom();
 
@@ -651,14 +684,19 @@
                 },
                 body: JSON.stringify({ 
                     prompt: prompt,
-                    conversation_id: conversation_id
-                })
+                    conversation_id: conversation_id,
+                    prompt_uuid: currentPromptUuid
+                }),
+                signal: signal
             });
 
             const result = await response.json();
 
             loading.classList.add('d-none');
+            submitBtn.classList.remove('d-none');
+            stopBtn.classList.add('d-none');
             submitBtn.disabled = false;
+            currentAbortController = null;
 
             if (result.status) {
                 appendAiResponse(result.data.content);
@@ -683,8 +721,16 @@
 
         } catch (error) {
             loading.classList.add('d-none');
+            submitBtn.classList.remove('d-none');
+            stopBtn.classList.add('d-none');
             submitBtn.disabled = false;
-            handleAiError('Connection error. Please try again.', promptInput, prompt);
+            currentAbortController = null;
+            
+            if (error.name === 'AbortError') {
+                appendAiResponse("Generation stopped.");
+            } else {
+                handleAiError('Connection error. Please try again.', promptInput, prompt);
+            }
         }
     });
 

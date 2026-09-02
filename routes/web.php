@@ -14,6 +14,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/', [AgentController::class, 'agent']);
     Route::post('/agent/ask', [AgentController::class, 'ask']);
+    Route::post('/agent/stop', [AgentController::class, 'stop']);
     Route::get('/history', [AgentController::class, 'history']);
     Route::get('/history/prompts', [AgentController::class, 'prompts']);
     Route::get('/history/{id}', [AgentController::class, 'agent']);
