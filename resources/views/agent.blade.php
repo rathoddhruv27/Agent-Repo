@@ -74,10 +74,20 @@
                     <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
                     <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                 </div>
-                <div class="d-flex gap-1 mt-2">
+                <!-- Default text loading -->
+                <div id="loadingText" class="d-flex gap-1 mt-2">
                     <div class="dot"></div>
                     <div class="dot" style="animation-delay: 0.2s"></div>
                     <div class="dot" style="animation-delay: 0.4s"></div>
+                </div>
+                <!-- Image generation skeleton loading -->
+                <div id="loadingImage" class="d-none mt-2" style="background: #2a2a2a; border-radius: 12px; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 16px; left: 16px; color: #a3a3a3; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                        Creating image...
+                    </div>
+                    <!-- Skeleton Grid Background -->
+                    <div style="width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
                 </div>
             </div>
         </div>
@@ -187,6 +197,12 @@
     @keyframes slideIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin {
+        animation: spin 1s linear infinite;
     }
     .w-fit-content { width: fit-content; }
     .hover-opacity-100:hover { opacity: 1 !important; }
@@ -802,6 +818,16 @@
         
         const suggestions = document.getElementById('suggestionsContainer');
         if (suggestions) suggestions.style.display = 'none';
+
+        // Detect if user is asking for an image
+        const isImageRequest = /generate.*image|create.*image|picture of|image of|draw.*image|show.*image|make.*image/i.test(prompt);
+        if (isImageRequest) {
+            document.getElementById('loadingText').classList.add('d-none');
+            document.getElementById('loadingImage').classList.remove('d-none');
+        } else {
+            document.getElementById('loadingText').classList.remove('d-none');
+            document.getElementById('loadingImage').classList.add('d-none');
+        }
 
         // Move loading indicator to the bottom so it appears after user's new message
         document.getElementById('chatResponseArea').appendChild(loading);

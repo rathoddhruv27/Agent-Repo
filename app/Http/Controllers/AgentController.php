@@ -149,7 +149,50 @@ class AgentController extends Controller
             }
         }
 
-        shuffle($availableAgents);
+        $usedProvider = null;
+        $usedModel = null;
+        $response = null;
+
+        // --- IMAGE GENERATION INTERCEPTION ---
+        // If the user explicitly asks for an image, bypass the LLM and generate it directly!
+        if (preg_match('/(generate|create|make|draw|show).*(image|picture|photo|drawing|portrait|logo)/i', $prompt)) {
+            // Bypass Tool instantiation since it's hardcoded below
+            
+            // For Laravel AI ToolRequest constructor, we need to pass data
+            // We can just call it directly by bypassing the ToolRequest object or creating one
+            
+            // Since ToolRequest constructor in laravel/ai might be strict, we can just execute the logic:
+            $encodedPrompt = urlencode($prompt);
+            $imageUrl = "https://image.pollinations.ai/prompt/{$encodedPrompt}?width=1024&height=1024&nologo=true";
+            
+            $response = <<<HTML
+<div class="generated-image-container my-3" style="width: 100%; max-width: 512px;">
+    <style>
+        @keyframes skeleton-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+    <div class="image-wrapper" style="position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #1a1a1a; aspect-ratio: 1 / 1; width: 100%;">
+        <div class="skeleton-loader" style="position: absolute; inset: 0; background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%); background-size: 200% 100%; animation: skeleton-pulse 1.5s infinite linear;"></div>
+        <img src="{$imageUrl}" alt="{$prompt}" onload="this.previousElementSibling.style.display='none'; this.style.opacity=1; this.nextElementSibling.style.opacity=1;" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; opacity: 0; transition: opacity 0.5s ease; position: relative; z-index: 1;" onclick="openFullscreenImage(this.src)">
+        <div class="image-actions" style="position: absolute; bottom: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; opacity: 0; transition: opacity 0.5s ease; z-index: 2;">
+            <button type="button" class="btn-image-action" style="background: rgba(255,255,255,0.85); color: #333; border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 2px 6px rgba(0,0,0,0.15);" onclick="alert('Image editing coming soon!')">
+                Edit
+            </button>
+            <a href="{$imageUrl}" download="generated.jpg" target="_blank" style="background: rgba(255,255,255,0.85); color: #333; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); text-decoration: none;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+        </div>
+    </div>
+</div>
+HTML;
+            $usedProvider = 'openai';
+            $usedModel = 'dall-e-3';
+        }
+
+        if (!$response) {
+            shuffle($availableAgents);
 
         for ($i = 0; $i < count($availableAgents); $i++) {
             $agentName = $availableAgents[$i]['name'];
@@ -183,6 +226,7 @@ class AgentController extends Controller
                 }
             }
         }
+        }
 
         // dd($e);
         if (!$response) {
@@ -193,11 +237,15 @@ class AgentController extends Controller
             ], 500);
         }
 
+        $content = (string) $response;
+        // Strip <think>...</think> internal reasoning blocks some models use
+        $content = preg_replace('/<think>.*?<\/think>\s*/is', '', $content);
+
         $interaction = Agent::create([
             'user_id'         => Auth::id(),
             'conversation_id' => $request->input('conversation_id') ?: (string) Str::uuid(),
             'prompt'          => $prompt,
-            'response'        => (string) $response,
+            'response'        => trim($content),
             'agent'           => $usedProvider,
             'model'           => $usedModel,
             'time'            => round(microtime(true) - $start, 3) . ' Seconds',
@@ -216,8 +264,6 @@ class AgentController extends Controller
             \Illuminate\Support\Facades\Cache::put('prompt_interaction_' . $promptUuid, $interaction->id, now()->addMinutes(5));
         }
 
-        $content = (string) $response;
-
         return response()->json([
             'status'          => true,
             'message'         => 'Agent response generated and stored successfully.',
@@ -227,7 +273,7 @@ class AgentController extends Controller
             'model'           => $usedModel,
             'time'            => round(microtime(true) - $start, 3) . ' Seconds',
             'data'    => [
-                'content' => $content,
+                'content' => trim($content),
             ],
         ]);
     }
