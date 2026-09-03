@@ -896,6 +896,17 @@
         .aureon-toast-close:hover {
             color: white;
         }
+
+        /* Remove card, popover, modal, and container shadows */
+        .modal-content,
+        .profile-popover,
+        .card,
+        .model-dropdown-menu,
+        .input-pill-container,
+        .aureon-toast,
+        .suggestion-btn {
+            box-shadow: none !important;
+        }
     </style>
     
     @yield('styles')
