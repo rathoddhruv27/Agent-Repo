@@ -986,11 +986,11 @@
         <div class="sidebar-footer">
             <div class="user-profile-trigger" id="profileTrigger" style="cursor: pointer; padding: 10px 12px; border-radius: 12px; transition: background-color 0.2s; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                 <div class="d-flex align-items-center gap-3 overflow-hidden" style="flex: 1;">
-                    <div class="avatar-container" style="width: 36px; height: 36px;">
-                        <div class="bg-warning text-dark w-100 h-100 d-flex align-items-center justify-content-center fw-bold initials-avatar {{ Auth::user()->profile_image ? 'd-none' : '' }}" style="font-size: 0.9rem; background-color: #f59e0b !important;">
+                    <div class="avatar-container" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; border-radius: 50% !important; overflow: hidden; flex-shrink: 0;">
+                        <div class="bg-warning text-dark w-100 h-100 d-flex align-items-center justify-content-center fw-bold initials-avatar {{ Auth::user()->profile_image ? 'd-none' : '' }}" style="font-size: 0.85rem; background-color: #f59e0b !important; border-radius: 50% !important;">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}{{ count(explode(' ', Auth::user()->name)) > 1 ? strtoupper(substr(explode(' ', Auth::user()->name)[1], 0, 1)) : '' }}
                         </div>
-                        <img src="{{ Auth::user()->profile_image ? asset(Auth::user()->profile_image) : '' }}" class="w-100 h-100 img-avatar {{ Auth::user()->profile_image ? '' : 'd-none' }}" style="object-fit: cover; border-radius: 50%;">
+                        <img src="{{ Auth::user()->profile_image ? asset(Auth::user()->profile_image) : '' }}" class="w-100 h-100 img-avatar {{ Auth::user()->profile_image ? '' : 'd-none' }}" style="object-fit: cover; border-radius: 50% !important;">
                     </div>
                     <div class="overflow-hidden text-start">
                         <p class="mb-0 text-white text-truncate fw-bold" style="font-size: 0.85rem; line-height: 1.2;">{{ Auth::user()->name }}</p>
@@ -1009,11 +1009,11 @@
         <!-- Header (User Info) -->
         <div class="popover-item" style="cursor: default; pointer-events: none;">
             <div class="popover-item-left">
-                <div class="avatar-container" style="width: 32px; height: 32px;">
-                    <div class="bg-warning text-dark w-100 h-100 d-flex align-items-center justify-content-center fw-bold initials-avatar {{ Auth::user()->profile_image ? 'd-none' : '' }}" style="font-size: 0.8rem; background-color: #f59e0b !important;">
+                <div class="avatar-container" style="width: 32px; height: 32px; min-width: 32px; min-height: 32px; border-radius: 50% !important; overflow: hidden; flex-shrink: 0;">
+                    <div class="bg-warning text-dark w-100 h-100 d-flex align-items-center justify-content-center fw-bold initials-avatar {{ Auth::user()->profile_image ? 'd-none' : '' }}" style="font-size: 0.8rem; background-color: #f59e0b !important; border-radius: 50% !important;">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}{{ count(explode(' ', Auth::user()->name)) > 1 ? strtoupper(substr(explode(' ', Auth::user()->name)[1], 0, 1)) : '' }}
                     </div>
-                    <img src="{{ Auth::user()->profile_image ? asset(Auth::user()->profile_image) : '' }}" class="w-100 h-100 img-avatar {{ Auth::user()->profile_image ? '' : 'd-none' }}" style="object-fit: cover; border-radius: 50%;">
+                    <img src="{{ Auth::user()->profile_image ? asset(Auth::user()->profile_image) : '' }}" class="w-100 h-100 img-avatar {{ Auth::user()->profile_image ? '' : 'd-none' }}" style="object-fit: cover; border-radius: 50% !important;">
                 </div>
                 <div class="overflow-hidden text-start">
                     <p class="mb-0 text-white fw-bold text-truncate" style="font-size: 0.8rem; line-height: 1.2; max-width: 140px;">{{ Auth::user()->name }}</p>
