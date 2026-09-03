@@ -151,7 +151,16 @@ class AgentController extends Controller
         $currentConversationId = null;
         
         if ($id) {
-            $interaction = Agent::where('user_id', Auth::id())->where('id', $id)->first();
+            $interaction = Agent::where('user_id', Auth::id())
+                ->where(function($q) use ($id) {
+                    if (is_numeric($id)) {
+                        $q->where('id', $id)->orWhere('conversation_id', (string)$id);
+                    } else {
+                        $q->where('conversation_id', $id);
+                    }
+                })
+                ->first();
+
             if ($interaction) {
                 if ($interaction->conversation_id) {
                     $messages = Agent::where('user_id', Auth::id())
@@ -162,6 +171,8 @@ class AgentController extends Controller
                 } else {
                     $messages->push($interaction);
                 }
+            } else {
+                return redirect()->to('/');
             }
         }
         
@@ -389,24 +400,31 @@ HTML;
     public function renameHistory(Request $request, $id)
     {
         $request->validate(['title' => 'required|string|max:255']);
-        $agent = Agent::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
-        
-        $agent->update(['prompt' => $request->title]);
+
+        Agent::where('user_id', Auth::id())
+            ->where(function($q) use ($id) {
+                if (is_numeric($id)) {
+                    $q->where('id', $id)->orWhere('conversation_id', (string)$id);
+                } else {
+                    $q->where('conversation_id', $id);
+                }
+            })
+            ->update(['prompt' => $request->title]);
         
         return redirect()->back();
     }
 
     public function deleteHistory($id)
     {
-        $agent = Agent::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
-        
-        if ($agent->conversation_id) {
-            Agent::where('user_id', Auth::id())
-                ->where('conversation_id', $agent->conversation_id)
-                ->delete();
-        } else {
-            $agent->delete();
-        }
+        Agent::where('user_id', Auth::id())
+            ->where(function($q) use ($id) {
+                if (is_numeric($id)) {
+                    $q->where('id', $id)->orWhere('conversation_id', (string)$id);
+                } else {
+                    $q->where('conversation_id', $id);
+                }
+            })
+            ->delete();
         
         return redirect()->to('/');
     }
