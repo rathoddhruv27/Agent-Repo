@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'gemini',
+    'default' => 'anthropic',
     'default_for_images' => 'gemini',
     'default_for_audio' => 'gemini',
     'default_for_transcription'=> 'openai',
@@ -38,6 +38,7 @@ return [
     */
 
     'fallback_chain' => [
+        'anthropic' => env('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20240620'),
         'gemini' => env('GEMINI_MODEL', 'gemini-2.5-flash'),
         'openai' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
         'groq' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),

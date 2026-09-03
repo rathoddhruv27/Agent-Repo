@@ -72,6 +72,7 @@ class AiProviderService
     protected function mapToLab(string $provider): Lab
     {
         return match (strtolower($provider)) {
+            'anthropic'=> Lab::Anthropic,
             'gemini'   => Lab::Gemini,
             'openai'   => Lab::OpenAI,
             'groq'     => Lab::Groq,

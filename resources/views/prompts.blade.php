@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Recent Prompts - Alternative')
+@section('title', 'Recent Prompts - Aureon')
 
 @section('content')
 <div class="container-fluid container-custom">

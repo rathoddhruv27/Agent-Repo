@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'History - Alternative')
+@section('title', 'History - Aureon')
 
 @section('content')
 <div class="container-fluid">

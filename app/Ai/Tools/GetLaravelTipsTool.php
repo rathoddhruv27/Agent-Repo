@@ -5,7 +5,7 @@ namespace App\Ai\Tools;
 use Laravel\Ai\Tools\Tool;
 use Laravel\Ai\Tools\ToolRequest;
 
-class GetLaravelTipsTool extends Tool   
+class GetLaravelTipsTool extends Tool
 {
     /**
      * Tool name visible to the model.

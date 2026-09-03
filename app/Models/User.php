@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'profile_image', 'custom_instructions_about', 'custom_instructions_respond', 'custom_instructions_enabled'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {   
@@ -22,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_image',
+        'custom_instructions_about',
+        'custom_instructions_respond',
+        'custom_instructions_enabled',
     ];
 
     protected $hidden = [

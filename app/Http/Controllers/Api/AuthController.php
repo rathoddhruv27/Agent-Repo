@@ -56,7 +56,15 @@ class AuthController extends Controller
         try {
             $credentials = $request->only('email', 'password');
 
-            if (!Auth::attempt($credentials)) {
+            try {
+                if (!Auth::attempt($credentials)) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Invalid credentials'
+                    ], 401);
+                }
+            } catch (\RuntimeException $e) {
+                // If hashing verification fails (e.g. non-bcrypt hash in DB), treat as invalid credentials
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid credentials'

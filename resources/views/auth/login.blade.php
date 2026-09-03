@@ -1,16 +1,26 @@
 @extends('layouts.app')
 
-@section('title', 'Sign In — Alternative')
+@section('title', 'Sign In — Aureon')
 
 @section('content')
-<div class="auth-center">
-    <div class="auth-card">
+<div class="auth-split-layout">
+    <!-- Left Side: Video -->
+    <div class="auth-video-section d-none d-lg-block">
+        <video autoplay loop muted playsinline class="auth-video-bg">
+            <source src="{{ asset('agent.mp4') }}" type="video/webm">
+        </video>
+        <div class="auth-video-overlay"></div>
+    </div>
 
-        <div class="text-center mb-5">
-            <img src="{{ asset('robo.png') }}" alt="Alternative" width="52" height="52" class="mb-3">
-            <h2 class="fw-bold text-white mb-1">Welcome back</h2>
-            <p class="auth-subtitle">Sign in to continue to Alternative</p>
-        </div>
+    <!-- Right Side: Form -->
+    <div class="auth-form-section">
+        <div class="auth-card">
+
+            <div class="text-center mb-5">
+                <img src="{{ asset('robo.png') }}" alt="Aureon" style="height: 140px; width: auto;" class="mb-3">
+                <h2 class="fw-bold text-white mb-1">Welcome back</h2>
+                <p class="auth-subtitle">Sign in to continue to Aureon</p>
+            </div>
 
         @if(session('error'))
             <div class="auth-alert mb-4">{{ session('error') }}</div>
@@ -58,30 +68,64 @@
         <p class="text-center mt-4 auth-footer-text">
             Don't have an account? <a href="/register">Create one for free</a>
         </p>
+        </div>
     </div>
 </div>
 @endsection
 
 @section('styles')
 <style>
-.auth-center {
+/* Split Layout */
+.auth-split-layout {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Left Side (Video) */
+.auth-video-section {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+.auth-video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.auth-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 100%);
+}
+
+/* Right Side (Form) */
+.auth-form-section {
+    flex: 1;
+    max-width: 600px; /* Limit width of form side on large screens */
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    width: 100%;
     padding: 24px;
-    box-sizing: border-box;
-    /* overflow-y: auto; */
+    background-color: var(--bg-dark);
+    position: relative;
+    z-index: 1;
 }
 .auth-card {
-    background: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 20px;
-    padding: 20px 20px;
     width: 100%;
-    max-width: 440px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    max-width: 420px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
 .auth-subtitle {
     color: var(--text-muted);
@@ -132,7 +176,7 @@
 .auth-field input:-webkit-autofill,
 .auth-field input:-webkit-autofill:hover,
 .auth-field input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 30px #181818 inset !important;
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important;
     -webkit-text-fill-color: #ececec !important;
     caret-color: #ececec;
     border-radius: 12px;

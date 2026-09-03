@@ -20,6 +20,11 @@ class AgentController extends Controller
 
     $agents = [
         [
+            'name' => 'anthropic',
+            'provider' => Lab::Anthropic,
+            'model' => 'claude-3-5-sonnet-20240620',
+        ],
+        [
             'name' => 'gemini',
             'provider' => Lab::Gemini,
             'model' => 'gemini-2.5-flash',
@@ -74,6 +79,7 @@ class AgentController extends Controller
         'agent' => $usedProvider,
         'model' => $usedModel,
         'time' => round(microtime(true) - $start, 3) . ' Seconds',
+        'profile_img' => auth()->user()->profile_img,
     ]);
 
     return response()->json([

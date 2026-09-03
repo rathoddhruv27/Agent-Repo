@@ -21,7 +21,8 @@ class Agent extends Model
         'response',
         'agent',
         'model',
-        'time'
+        'time',
+        'image_path'
     ];
 
     public function user()
