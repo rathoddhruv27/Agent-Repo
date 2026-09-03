@@ -651,15 +651,16 @@
         .btn-modal-cancel {
             background: transparent;
             border: 1px solid transparent;
-            color: rgba(255, 255, 255, 0.5);
+            color: #d4d4d8 !important;
             border-radius: 50rem;
-            padding: 0.375rem 1rem;
+            padding: 0.4rem 1.1rem;
             font-size: 0.875rem;
+            font-weight: 500;
             transition: color 0.2s, background-color 0.2s;
         }
         .btn-modal-cancel:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .aureon-modal-header {
@@ -667,20 +668,20 @@
             align-items: center;
             justify-content: space-between;
             padding: 18px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .aureon-modal-title {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            color: white;
+            color: #ffffff;
             margin: 0;
         }
 
         .aureon-modal-close {
             background: transparent;
             border: none;
-            color: #b4b4b4;
+            color: #d4d4d8;
             cursor: pointer;
             font-size: 1.5rem;
             line-height: 1;
@@ -699,7 +700,7 @@
             padding: 24px;
             overflow-y: auto;
             max-height: 70vh;
-            color: #ececec;
+            color: #f4f4f5;
         }
 
         .aureon-modal-footer {
@@ -732,25 +733,26 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 12px;
+            padding: 9px 12px;
             border-radius: 8px;
             border: none;
             background: transparent;
-            color: #b4b4b4;
-            font-size: 0.85rem;
+            color: #d4d4d8 !important; /* Zinc 300 for readable tab items */
+            font-size: 0.88rem;
             font-weight: 500;
             text-align: left;
             transition: all 0.15s;
         }
 
         .settings-tab-btn:hover {
-            background-color: rgba(255, 255, 255, 0.04);
-            color: white;
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #ffffff !important;
         }
 
         .settings-tab-btn.active {
-            background-color: rgba(255, 255, 255, 0.08);
-            color: white;
+            background-color: rgba(255, 255, 255, 0.12);
+            color: #ffffff !important;
+            font-weight: 600;
         }
 
         .settings-content {
@@ -766,21 +768,30 @@
             display: block;
         }
 
-        /* Custom form inputs inside modals */
+        /* High Contrast Modal Form Inputs & Labels */
         .modal-input {
             width: 100%;
-            background-color: #212121;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #262626 !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
             border-radius: 8px;
             padding: 10px 14px;
-            color: white;
-            font-size: 0.9rem;
+            color: #ffffff !important;
+            font-size: 0.92rem;
             outline: none;
-            transition: border-color 0.15s;
+            transition: border-color 0.15s, background-color 0.15s;
         }
 
         .modal-input:focus {
-            border-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.35) !important;
+            background-color: #2d2d2d !important;
+        }
+
+        .modal-input::placeholder,
+        .modal-textarea::placeholder,
+        textarea::placeholder,
+        input::placeholder {
+            color: #a1a1aa !important; /* High contrast readable placeholder */
+            opacity: 0.85 !important;
         }
 
         .modal-textarea {
@@ -790,10 +801,25 @@
 
         .modal-label {
             display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #b4b4b4;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #f4f4f5 !important; /* High contrast white/zinc */
             margin-bottom: 8px;
+            letter-spacing: 0.01em;
+        }
+
+        /* High contrast subtext across all modals */
+        .aureon-modal .text-muted,
+        .aureon-modal small.text-muted,
+        .aureon-modal p.text-muted,
+        .settings-pane p.text-muted,
+        .settings-pane small {
+            color: #a1a1aa !important; /* Readable Zinc 400 */
+            font-size: 0.82rem;
+        }
+
+        .aureon-modal .text-white-50 {
+            color: #d4d4d8 !important;
         }
 
         /* Avatar overlay and container styles */
@@ -1085,7 +1111,7 @@
         </button>
 
         <!-- Prompt Library -->
-        <a href="/prompts" class="popover-item" id="popoverPrompts">
+        <a href="/prompts" class="popover-item d-none" id="popoverPrompts">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                 <span>Prompt Templates Library</span>
@@ -1093,7 +1119,7 @@
         </a>
 
         <!-- Upgrade Plan -->
-        <button class="popover-item" id="popoverUpgrade">
+        <button class="popover-item d-none" id="popoverUpgrade">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l1.912 5.886h6.188l-5.006 3.638 1.912 5.886-5.006-3.638-5.006 3.638 1.912-5.886-5.006-3.638h6.188z"/></svg>
                 <span>Upgrade Plan</span>
