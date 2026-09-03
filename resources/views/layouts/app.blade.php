@@ -897,15 +897,30 @@
             color: white;
         }
 
-        /* Remove card, popover, modal, and container shadows */
+        /* Complete elimination of all box shadows globally across the entire application */
+        *,
+        *::before,
+        *::after,
+        .modal,
+        .modal-dialog,
         .modal-content,
+        .aureon-modal,
+        .aureon-modal-container,
         .profile-popover,
         .card,
+        .sidebar,
         .model-dropdown-menu,
         .input-pill-container,
         .aureon-toast,
-        .suggestion-btn {
+        .suggestion-btn,
+        kbd,
+        button,
+        input,
+        textarea {
             box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            filter: none !important;
+            -webkit-filter: none !important;
         }
     </style>
     
