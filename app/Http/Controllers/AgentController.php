@@ -359,39 +359,9 @@ HTML;
 
     private function shouldSwitchProvider(Throwable $e): bool
     {
-        $message = strtolower($e->getMessage());
-
-        return Str::contains($message, [
-            'rate limit',
-            'too many requests',
-            'overloaded',
-            'quota',
-            'exceeded',
-            'expired',
-            'invalid api key',
-            'incorrect api key',
-            'does not exist',
-            'decommissioned',
-            'authentication',
-            'unauthorized',
-            'insufficient',
-            'limit',
-            '400',
-            '401',
-            '403',
-            '404',
-            '413',
-            '429',
-            '500',
-            '502',
-            '503',
-            '504',
-            'timeout',
-            'connection',
-            'unavailable',
-            'not found',
-            'empty response',
-        ]);
+        // Always attempt fallback to the next available provider on any exception
+        // (missing API keys, 403 unregistered callers, rate limits, 404s, timeouts, etc.)
+        return true;
     }
 
     public function history(Request $request)
