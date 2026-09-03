@@ -994,7 +994,6 @@
                     </div>
                     <div class="overflow-hidden text-start">
                         <p class="mb-0 text-white text-truncate fw-bold" style="font-size: 0.85rem; line-height: 1.2;">{{ Auth::user()->name }}</p>
-                        <p class="mb-0 text-white-50" style="font-size: 0.7rem;">Plus</p>
                     </div>
                 </div>
                 <div class="text-white-50" style="flex-shrink: 0; display: flex; align-items: center;">
@@ -1017,7 +1016,6 @@
                 </div>
                 <div class="overflow-hidden text-start">
                     <p class="mb-0 text-white fw-bold text-truncate" style="font-size: 0.8rem; line-height: 1.2; max-width: 140px;">{{ Auth::user()->name }}</p>
-                    <p class="mb-0 text-white-50" style="font-size: 0.65rem;">Plus</p>
                 </div>
             </div>
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -1176,7 +1174,6 @@
                     </div>
                     <input type="file" id="profileImageFileInput" accept="image/*" style="display: none;">
                     <h6 class="text-white fw-bold mb-0" id="profileNameHeader">{{ Auth::user()->name }}</h6>
-                    <span class="badge bg-warning text-dark mt-1" style="font-size: 0.65rem;">Plus Member</span>
                 </div>
                 
                 <div class="mb-3">
