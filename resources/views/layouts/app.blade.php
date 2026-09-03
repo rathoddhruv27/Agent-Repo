@@ -164,13 +164,35 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                width: 280px;
+                max-width: 85vw;
             }
             .sidebar.show {
                 transform: translateX(0);
+                box-shadow: 10px 0 30px rgba(0,0,0,0.6);
             }
             .main-content {
                 margin-left: 0;
+            }
+            .aureon-modal {
+                max-width: min(92vw, 550px) !important;
+                max-height: 90vh !important;
+                margin: auto;
+            }
+            .profile-popover {
+                left: 12px !important;
+                bottom: 70px !important;
+                max-width: calc(100vw - 24px) !important;
+            }
+            .toast-container {
+                left: 12px !important;
+                right: 12px !important;
+                bottom: 12px !important;
+            }
+            .aureon-toast {
+                min-width: 100% !important;
+                max-width: 100% !important;
             }
         }
 
@@ -1413,6 +1435,20 @@
                 else overlay.classList.add('d-none');
             }
         }
+
+        // Auto-close sidebar on mobile navigation
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.sidebar .nav-link, .sidebar .nav-sub-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 992) {
+                        const sidebar = document.querySelector('.sidebar');
+                        const overlay = document.getElementById('sidebarOverlay');
+                        if (sidebar) sidebar.classList.remove('show');
+                        if (overlay) overlay.classList.add('d-none');
+                    }
+                });
+            });
+        });
 
         function showHistoryMenu(event, id, title) {
             event.preventDefault();

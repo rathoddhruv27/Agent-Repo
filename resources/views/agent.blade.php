@@ -574,11 +574,19 @@
 
     /* Responsive Styles */
     @media (max-width: 992px) {
+        .custom-model-dropdown {
+            top: 10px !important;
+            left: 48px !important;
+        }
+        .model-dropdown-btn {
+            font-size: 0.95rem;
+            padding: 6px 12px;
+        }
         .message-round {
-            padding: 20px 15px;
+            padding: 16px 14px;
         }
         .chat-column {
-            padding: 70px 0 160px 0;
+            padding: 70px 0 140px 0;
         }
         .welcome-title {
             font-size: 2rem;
@@ -586,66 +594,92 @@
     }
 
     @media (max-width: 768px) {
+        .custom-model-dropdown {
+            top: 10px !important;
+            left: 44px !important;
+        }
+        .model-dropdown-menu {
+            width: calc(100vw - 32px) !important;
+            max-width: 340px !important;
+            left: -32px !important;
+        }
         .message-round {
-            padding: 16px 12px;
+            padding: 14px 10px;
         }
         .chat-column {
-            padding: 70px 0 140px 0;
+            padding: 65px 0 130px 0;
         }
         .user-bubble {
-            max-width: 90%;
+            max-width: 92%;
+            padding: 10px 16px;
+            font-size: 0.95rem;
         }
         .welcome-title {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
         }
         .chat-footer-wrapper {
-            padding: 12px;
-            padding-bottom: env(safe-area-inset-bottom, 24px);
+            padding: 8px 10px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom, 16px));
         }
         .input-pill-container {
             padding: 6px 10px;
-            background: #2f2f2f;
+            background: #252525;
             border-radius: 24px;
-            flex-direction: row;
-            align-items: center;
         }
         .pill-input {
             width: 100%;
-            padding: 8px 4px;
-            height: 40px;
+            padding: 6px 4px;
+            max-height: 120px;
+            font-size: 0.95rem;
         }
-        .pill-actions {
-            display: flex;
-            align-items: center;
-            margin-top: 0;
+        .markdown-rendered pre {
+            max-width: 100%;
+            overflow-x: auto;
+            font-size: 0.85rem;
+        }
+        .markdown-rendered table {
+            display: block;
+            overflow-x: auto;
+            max-width: 100%;
         }
     }
 
     @media (max-width: 480px) {
+        .custom-model-dropdown {
+            top: 10px !important;
+            left: 40px !important;
+        }
+        .model-dropdown-btn {
+            font-size: 0.85rem;
+            padding: 4px 8px;
+        }
+        .model-dropdown-menu {
+            width: calc(100vw - 20px) !important;
+            max-width: 320px !important;
+            left: -28px !important;
+        }
         .message-round {
-            padding: 12px 10px;
+            padding: 10px 8px;
         }
         .chat-column {
-            padding: 70px 0 130px 0;
+            padding: 60px 0 120px 0;
         }
         .user-bubble {
             max-width: 95%;
+            font-size: 0.9rem;
         }
         .welcome-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
         .chat-footer-wrapper {
-            padding: 10px;
-            padding-bottom: env(safe-area-inset-bottom, 24px);
+            padding: 6px 8px;
+            padding-bottom: max(8px, env(safe-area-inset-bottom, 12px));
         }
         .message-label {
             font-size: 0.8rem;
         }
         .message-text {
-            font-size: 0.95rem;
-        }
-        .pill-input {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
         }
     }
 </style>
