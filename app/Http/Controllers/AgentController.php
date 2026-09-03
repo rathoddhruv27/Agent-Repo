@@ -276,69 +276,48 @@ HTML;
         if (!$response) {
             shuffle($availableAgents);
 
-        for ($i = 0; $i < count($availableAgents); $i++) {
-            $agentName = $availableAgents[$i]['name'];
-            $provider = $availableAgents[$i]['provider'];
-            $model = $availableAgents[$i]['model'];
+            for ($i = 0; $i < count($availableAgents); $i++) {
+                $agentName = $availableAgents[$i]['name'];
+                $provider = $availableAgents[$i]['provider'];
+                $model = $availableAgents[$i]['model'];
 
-            try {
-                $agent = new SupportAgent();
-                
-                $request->conversation_id 
-                    ? $agent->continue($request->conversation_id, as: auth()->user())
-                    : $agent->forUser(auth()->user());
+                // Check if API key exists for this provider before attempting request
+                $apiKey = config("ai.providers.{$agentName}.key") ?: config("services.{$agentName}.key");
+                if (empty($apiKey)) {
+                    \Log::info("Skipping AI Provider {$agentName}: No API key configured.");
+                    continue;
+                }
 
-                $response = $agent->prompt(
-                    $prompt,
-                    attachments: $attachments,
-                    provider: $provider,
-                    model: $model
-                );
+                try {
+                    $agent = new SupportAgent();
+                    
+                    $request->conversation_id 
+                        ? $agent->continue($request->conversation_id, as: auth()->user())
+                        : $agent->forUser(auth()->user());
 
-                $usedProvider = $agentName;
-                $usedModel = $model;
-                break;
+                    $response = $agent->prompt(
+                        $prompt,
+                        attachments: $attachments,
+                        provider: $provider,
+                        model: $model
+                    );
 
-            } catch (Throwable $e) {
-                \Log::warning("AI Provider {$agentName} failed: " . $e->getMessage());
-                $lastError = $e;
-                
-                if (!$this->shouldSwitchProvider($e)) {
+                    $usedProvider = $agentName;
+                    $usedModel = $model;
                     break;
-                }
-            }
-        }
-        }
 
-        if (!$response) {
-            // Ultimate zero-key safety net fallback via Pollinations Free AI Engine
-            try {
-                $systemPrompt = (new SupportAgent())->instructions();
-                $httpRes = \Illuminate\Support\Facades\Http::timeout(15)
-                    ->post('https://text.pollinations.ai/', [
-                        'messages' => [
-                            ['role' => 'system', 'content' => $systemPrompt],
-                            ['role' => 'user', 'content' => $prompt]
-                        ],
-                        'model' => 'openai'
-                    ]);
-
-                if ($httpRes->successful() && !empty(trim($httpRes->body()))) {
-                    $response = trim($httpRes->body());
-                    $usedProvider = 'openai';
-                    $usedModel = 'gpt-4o-mini';
+                } catch (Throwable $e) {
+                    \Log::warning("AI Provider {$agentName} failed: " . $e->getMessage());
+                    $lastError = $e;
                 }
-            } catch (Throwable $pe) {
-                \Log::warning("Free safety net fallback failed: " . $pe->getMessage());
             }
         }
 
         if (!$response) {
-            $errorMessage = isset($lastError) ? $lastError->getMessage() : 'All AI providers failed to respond.';
             return response()->json([
                 'status' => false,
-                'message' => 'AI Fallback Failed: ' . $errorMessage,
-            ], 500);
+                'message' => 'No valid AI API Key configured. Please go to Settings ⚙️ -> API Credentials to add your OpenAI, Gemini, Groq, DeepSeek, or Anthropic API Key.',
+            ], 400);
         }
 
         $content = (string) $response;
