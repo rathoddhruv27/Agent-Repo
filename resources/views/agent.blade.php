@@ -69,7 +69,7 @@
         <div class="message-round ai-message animate-in">
             <div class="message-content">
                 <div class="message-label d-flex align-items-center gap-2 mb-1">
-                    <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                    <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 50%; object-fit: cover;">
                     <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                 </div>
                 <div class="markdown-rendered message-text" data-raw-content="{{ $msg->response ?? '' }}"></div>
@@ -92,7 +92,7 @@
         <div id="loading" class="d-none message-round ai-message">
             <div class="message-content">
                 <div class="message-label d-flex align-items-center gap-2 mb-1">
-                    <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                    <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 50%; object-fit: cover;">
                     <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                 </div>
                 <!-- Default text loading -->
@@ -250,7 +250,7 @@
                 ];
                 
                 shuffle($allSuggestions);
-                $suggestions = array_slice($allSuggestions, 0, 5);
+                $suggestions = array_slice($allSuggestions, 0, 4);
             @endphp
             <div class="suggestions-container" id="suggestionsContainer">
                 @foreach($suggestions as $suggestion)
@@ -851,7 +851,7 @@
             <div class="message-round ai-message animate-in">
                 <div class="message-content">
                     <div class="message-label d-flex align-items-center gap-2 mb-1">
-                        <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 4px;">
+                        <img src="{{ asset('robo.png') }}" alt="Aureon" width="24" height="24" style="border-radius: 50%; object-fit: cover;">
                         <span style="font-weight: 600; font-size: 0.95rem;">Aureon</span>
                     </div>
                     <div class="markdown-rendered message-text">${marked.parse(content)}</div>

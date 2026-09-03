@@ -906,17 +906,14 @@
     @auth
     <div class="sidebar">
         <a href="/" class="sidebar-brand" title="Awareness is the greatest transformation">
-            <img src="{{ asset('robo.png') }}" alt="Logo" width="40" height="40">
+            <img src="{{ asset('robo.png') }}" alt="Logo" width="40" height="40" style="border-radius: 50%; object-fit: cover;">
             <h4 class="mb-0">Aureon</h4>
         </a>
 
         <div class="sidebar-nav-container">
             <nav class="nav flex-column">
                 <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/" title="Ctrl+Shift+O">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                     New Chat
                 </a>
                 
@@ -933,18 +930,28 @@
                                 }
                             }
                         @endphp
-                        <div class="history-item-wrapper" data-id="{{ $agent->id }}">
-                            <a class="nav-sub-link {{ $isActive ? 'active' : '' }}" id="history-link-{{ $agent->id }}" href="/history/{{ $agent->id }}" title="{{ $agent->prompt }}">
-                                <span class="text-truncate">{{ Str::limit($agent->prompt, 20) }}</span>
+                        
+                        @php
+                            $label = $agent->prompt;
+                            if (strlen($label) > 20) {
+                                $label = substr($label, 0, 20) . '...';
+                            }
+                            $safeTitle = e($agent->prompt);
+                            $safeJsPrompt = addslashes($agent->prompt);
+                            $uniqueId = $agent->conversation_id ?? $agent->id;
+                        @endphp
+
+                        <div class="history-item-wrapper" data-id="{{ $uniqueId }}">
+                            <a class="nav-sub-link {{ $isActive ? 'active' : '' }}" id="history-link-{{ $uniqueId }}" href="/history/{{ $uniqueId }}" title="{{ $safeTitle }}">
+                                <span class="text-truncate">{{ $label }}</span>
                             </a>
                             
-                            <!-- Inline Rename Input (Hidden by default) -->
-                            <div class="inline-rename-container" id="inline-rename-{{ $agent->id }}" style="display: none; width: 100%; padding: 4px 8px; margin: 2px 4px;">
-                                <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="inline-rename-input-{{ $agent->id }}" value="{{ $agent->prompt }}" style="font-size: 0.85rem;" autocomplete="off" onkeydown="handleInlineRenameKeydown(event, '{{ $agent->id }}')" onblur="cancelInlineRename('{{ $agent->id }}')">
+                            <div class="inline-rename-container" id="inline-rename-{{ $uniqueId }}" style="display: none; width: 100%; padding: 4px 8px; margin: 2px 4px;">
+                                <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="inline-rename-input-{{ $uniqueId }}" value="{{ $safeTitle }}" style="font-size: 0.85rem;" autocomplete="off" onkeydown="handleInlineRenameKeydown(event, '{{ $uniqueId }}')" onblur="cancelInlineRename('{{ $uniqueId }}')">
                             </div>
 
-                            <button type="button" class="history-options-btn" id="history-btn-{{ $agent->id }}" onclick="showHistoryMenu(event, '{{ $agent->id }}', '{{ addslashes($agent->prompt) }}')">
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+                            <button type="button" class="history-options-btn" id="history-btn-{{ $uniqueId }}" onclick="showHistoryMenu(event, '{{ $uniqueId }}', '{{ $safeJsPrompt }}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
                             </button>
                         </div>
                     @endforeach
