@@ -39,12 +39,8 @@ RUN chown -R www-data:www-data /var/www \
 # Build frontend assets if package.json exists
 RUN if [ -f package.json ]; then npm install && npm run build; fi
 
-# Set up environment and SQLite database
-RUN cp .env.example .env \
-    && sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env \
-    && touch database/database.sqlite \
-    && sed -i 's/APP_KEY=.*/APP_KEY=base64:PT187RB50Y+j3N0Cutl+QNk\/\/CiXRPPvNg9iKKIwPNQ=/' .env
+# Build frontend assets if package.json exists
+RUN if [ -f package.json ]; then npm install && npm run build; fi
 
-# Start Laravel development server
-# Render uses the PORT environment variable
+# Start Laravel application using Render environment variables
 CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
