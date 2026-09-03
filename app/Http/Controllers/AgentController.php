@@ -124,18 +124,22 @@ class AgentController extends Controller
     }
 
     public function agent(Request $request, $id = null) {
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'profile_image')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->string('profile_image')->nullable()->after('email');
-            });
-        }
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'profile_image')) {
+                \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                    $table->string('profile_image')->nullable()->after('email');
+                });
+            }
 
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'custom_instructions_about')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->text('custom_instructions_about')->nullable();
-                $table->text('custom_instructions_respond')->nullable();
-                $table->boolean('custom_instructions_enabled')->default(true);
-            });
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'custom_instructions_about')) {
+                \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                    $table->text('custom_instructions_about')->nullable();
+                    $table->text('custom_instructions_respond')->nullable();
+                    $table->boolean('custom_instructions_enabled')->default(true);
+                });
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("Schema check warning: " . $e->getMessage());
         }
 
         $agents = Agent::where('user_id', Auth::id())
