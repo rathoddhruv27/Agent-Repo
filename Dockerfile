@@ -39,8 +39,5 @@ RUN chown -R www-data:www-data /var/www \
 # Build frontend assets if package.json exists
 RUN if [ -f package.json ]; then npm install && npm run build; fi
 
-# Build frontend assets if package.json exists
-RUN if [ -f package.json ]; then npm install && npm run build; fi
-
 # Start Laravel application using Render environment variables
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+CMD sh -c "if [ ! -f .env ]; then cp .env.example .env; fi && php artisan key:generate --force && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"
