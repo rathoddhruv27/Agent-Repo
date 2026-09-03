@@ -25,6 +25,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') === 'production' || request()->header('X-Forwarded-Proto') === 'https') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
+        // Apply AI API Credentials from database / environment dynamically
+        try {
+            \App\Services\AiCredentialService::applyCredentials();
+        } catch (\Throwable $e) {
+            // Ignore database connection issues during console/migration setup
+        }
+
         Passport::enablePasswordGrant();
         Passport::tokensExpireIn(CarbonInterval::days(15));
         Passport::refreshTokensExpireIn(CarbonInterval::days(30));

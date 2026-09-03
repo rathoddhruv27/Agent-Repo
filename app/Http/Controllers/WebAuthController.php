@@ -150,4 +150,41 @@ class WebAuthController extends Controller
             'message' => 'Personalization instructions updated successfully',
         ]);
     }
+
+    public function updateApiKeys(Request $request)
+    {
+        $validated = $request->validate([
+            'gemini_api_key'    => ['nullable', 'string', 'max:500'],
+            'openai_api_key'    => ['nullable', 'string', 'max:500'],
+            'groq_api_key'      => ['nullable', 'string', 'max:500'],
+            'deepseek_api_key'  => ['nullable', 'string', 'max:500'],
+            'anthropic_api_key' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $user = Auth::user();
+
+        // 1. Update user-level overrides
+        $user->update([
+            'gemini_api_key'    => $validated['gemini_api_key'] ?? null,
+            'openai_api_key'    => $validated['openai_api_key'] ?? null,
+            'groq_api_key'      => $validated['groq_api_key'] ?? null,
+            'deepseek_api_key'  => $validated['deepseek_api_key'] ?? null,
+            'anthropic_api_key' => $validated['anthropic_api_key'] ?? null,
+        ]);
+
+        // 2. Also update system-wide settings table for any provided keys
+        foreach ($validated as $key => $val) {
+            if (!empty($val)) {
+                \App\Models\Setting::set($key, $val, 'api_credentials');
+            }
+        }
+
+        // 3. Re-apply credentials immediately into runtime configuration
+        \App\Services\AiCredentialService::applyCredentials($user);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'AI API Credentials successfully updated and stored in Database!',
+        ]);
+    }
 }

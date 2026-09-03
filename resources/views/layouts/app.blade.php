@@ -1215,6 +1215,10 @@
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                             <span>Security</span>
                         </button>
+                        <button class="settings-tab-btn" onclick="switchSettingsTab(event, 'settingsApiKeys')">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            <span>API Credentials</span>
+                        </button>
                     </div>
                     
                     <!-- Settings Panels -->
@@ -1317,6 +1321,36 @@
                                     <p class="mb-0 text-muted small">Sign out from active sessions on other devices.</p>
                                 </div>
                                 <button class="btn btn-outline-light btn-sm px-3" style="font-size: 0.8rem; border-color: rgba(255,255,255,0.15);" onclick="window.showToast('Signed out from all other devices!', 'success')">Log out all</button>
+                            </div>
+                        </div>
+
+                        <!-- API Credentials Panel -->
+                        <div id="settingsApiKeys" class="settings-pane">
+                            <h6 class="text-white fw-bold mb-1">Database AI Credentials</h6>
+                            <p class="text-muted small mb-3">Manage API keys stored directly in your database. Keys saved here dynamically override server environment variables.</p>
+                            
+                            <div class="mb-3">
+                                <label class="modal-label" style="font-size: 0.8rem;">Google Gemini API Key</label>
+                                <input type="password" class="modal-input" id="dbGeminiKey" value="{{ Auth::user()->gemini_api_key ?: \App\Models\Setting::get('gemini_api_key') }}" placeholder="AQ.Ab8RN6...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="modal-label" style="font-size: 0.8rem;">OpenAI API Key</label>
+                                <input type="password" class="modal-input" id="dbOpenAiKey" value="{{ Auth::user()->openai_api_key ?: \App\Models\Setting::get('openai_api_key') }}" placeholder="sk-proj-...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="modal-label" style="font-size: 0.8rem;">Groq API Key</label>
+                                <input type="password" class="modal-input" id="dbGroqKey" value="{{ Auth::user()->groq_api_key ?: \App\Models\Setting::get('groq_api_key') }}" placeholder="gsk_...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="modal-label" style="font-size: 0.8rem;">DeepSeek API Key</label>
+                                <input type="password" class="modal-input" id="dbDeepSeekKey" value="{{ Auth::user()->deepseek_api_key ?: \App\Models\Setting::get('deepseek_api_key') }}" placeholder="sk-82a2...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="modal-label" style="font-size: 0.8rem;">Anthropic API Key</label>
+                                <input type="password" class="modal-input" id="dbAnthropicKey" value="{{ Auth::user()->anthropic_api_key ?: \App\Models\Setting::get('anthropic_api_key') }}" placeholder="sk-ant-...">
+                            </div>
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-primary btn-sm btn-premium px-4 rounded-pill" onclick="saveDatabaseApiKeys()">Save Credentials to DB</button>
                             </div>
                         </div>
                     </div>
@@ -1778,6 +1812,36 @@
         @if(session('status'))
             window.showToast("{{ session('status') }}", 'success');
         @endif
+        // Save Database API Keys via AJAX
+        window.saveDatabaseApiKeys = function() {
+            const payload = {
+                gemini_api_key: document.getElementById('dbGeminiKey')?.value || '',
+                openai_api_key: document.getElementById('dbOpenAiKey')?.value || '',
+                groq_api_key: document.getElementById('dbGroqKey')?.value || '',
+                deepseek_api_key: document.getElementById('dbDeepSeekKey')?.value || '',
+                anthropic_api_key: document.getElementById('dbAnthropicKey')?.value || '',
+            };
+
+            fetch('/profile/update-api-keys', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.status) {
+                    window.showToast(data.message, 'success');
+                } else {
+                    window.showToast(data.message || 'Failed to save API credentials.', 'error');
+                }
+            })
+            .catch(err => {
+                window.showToast('Error saving credentials to database.', 'error');
+            });
+        };
     </script>
 </body>
 </html>

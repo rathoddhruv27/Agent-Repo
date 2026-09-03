@@ -24,4 +24,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/upload-image', [WebAuthController::class, 'uploadProfileImage']);
     Route::post('/profile/update-name', [WebAuthController::class, 'updateName']);
     Route::post('/profile/update-instructions', [WebAuthController::class, 'updateInstructions']);
+    Route::post('/profile/update-api-keys', [WebAuthController::class, 'updateApiKeys']);
 });

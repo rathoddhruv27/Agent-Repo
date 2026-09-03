@@ -169,6 +169,9 @@ class AgentController extends Controller
 
     public function ask(PromptRequest $request)
     {
+        // Apply database-stored AI API credentials & user overrides
+        \App\Services\AiCredentialService::applyCredentials(auth()->user());
+
         $validated = $request->validated();
         $start = microtime(true);
 
