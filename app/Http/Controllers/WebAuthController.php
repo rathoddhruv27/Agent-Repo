@@ -31,7 +31,7 @@ class WebAuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/login');
+        return redirect('/');
     }
 
     public function showLogin()
