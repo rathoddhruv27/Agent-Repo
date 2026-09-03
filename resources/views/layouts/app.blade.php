@@ -482,15 +482,26 @@
             position: fixed;
             bottom: 74px;
             left: 14px;
-            width: 252px;
-            background-color: #212121; /* Match var(--bg-card) */
+            width: 260px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background-color: #212121;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
-            box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
             z-index: 1050;
             padding: 6px;
             display: none; /* Controlled by JS */
             animation: popoverFadeIn 0.15s ease-out;
+        }
+
+        @media (max-width: 991.98px) {
+            .profile-popover {
+                bottom: 80px;
+                left: 12px;
+                width: calc(100% - 24px);
+                max-width: 320px;
+                z-index: 1060;
+            }
         }
 
         @keyframes popoverFadeIn {
@@ -1049,35 +1060,43 @@
         
         <div class="popover-divider"></div>
         
-        <!-- Upgrade Plan -->
-        <button class="popover-item d-none" id="popoverUpgrade">
-            <div class="popover-item-left">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l1.912 5.886h6.188l-5.006 3.638 1.912 5.886-5.006-3.638-5.006 3.638 1.912-5.886-5.006-3.638h6.188z"/></svg>
-                <span>Upgrade plan</span>
-            </div>
-        </button>
-        
-        <!-- Personalization -->
-        <button class="popover-item d-none" id="popoverPersonalization">
-            <div class="popover-item-left">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16M8 3v6M16 9v6M10 15v6"/></svg>
-                <span>Personalization</span>
-            </div>
-        </button>
-        
         <!-- Profile -->
         <button class="popover-item" id="popoverProfile">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
-                <span>Profile</span>
+                <span>My Profile</span>
             </div>
         </button>
-        
-        <!-- Settings -->
-        <button class="popover-item d-none" id="popoverSettings">
+
+        <!-- Settings / API Keys -->
+        <button class="popover-item" id="popoverSettings">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Settings</span>
+                <span>API Credentials & Settings</span>
+            </div>
+        </button>
+
+        <!-- Custom Instructions -->
+        <button class="popover-item" id="popoverPersonalization">
+            <div class="popover-item-left">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16M8 3v6M16 9v6M10 15v6"/></svg>
+                <span>Custom Instructions</span>
+            </div>
+        </button>
+
+        <!-- Prompt Library -->
+        <a href="/prompts" class="popover-item" id="popoverPrompts">
+            <div class="popover-item-left">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>Prompt Templates Library</span>
+            </div>
+        </a>
+
+        <!-- Upgrade Plan -->
+        <button class="popover-item" id="popoverUpgrade">
+            <div class="popover-item-left">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l1.912 5.886h6.188l-5.006 3.638 1.912 5.886-5.006-3.638-5.006 3.638 1.912-5.886-5.006-3.638h6.188z"/></svg>
+                <span>Upgrade Plan</span>
             </div>
         </button>
         
@@ -1085,7 +1104,7 @@
         <button class="popover-item" id="popoverHelp">
             <div class="popover-item-left">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-                <span>Help</span>
+                <span>Help & Support</span>
             </div>
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
