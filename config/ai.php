@@ -39,10 +39,10 @@ return [
 
     'fallback_chain' => [
         'anthropic' => env('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20240620'),
-        'gemini' => env('GEMINI_MODEL', 'gemini-2.5-flash'),
-        'openai' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
-        'groq' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
-        'deepseek' =>env('DEEPSEEK_MODEL', 'deepseek-v3.2-exp'), 
+        'gemini' => env('GEMINI_MODEL', 'gemini-3-flash-preview'),
+        'openai' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+        'groq' => env('GROQ_MODEL', 'qwen/qwen3.6-27b'),
+        'deepseek' => env('DEEPSEEK_MODEL', 'deepseek-chat'), 
     ],
 
     /*
@@ -84,13 +84,13 @@ return [
          'gemini' => [
             'driver' => 'gemini',
             'key'    => env('GEMINI_API_KEY'),
-            'model'  => env('GEMINI_MODEL', 'gemini-2.5-flash'),
+            'model'  => env('GEMINI_MODEL', 'gemini-3-flash-preview'),
         ],
 
         'openai' => [
             'driver' => 'openai',
             'key'    => env('OPENAI_API_KEY'),
-            'model'  => env('OPENAI_MODEL', 'gpt-4.1-mini'),
+            'model'  => env('OPENAI_MODEL', 'gpt-4o-mini'),
             'url'    => env('OPENAI_URL', 'https://api.openai.com/v1'),
         ],
 
