@@ -310,7 +310,29 @@ HTML;
         }
         }
 
-        // dd($e);
+        if (!$response) {
+            // Ultimate zero-key safety net fallback via Pollinations Free AI Engine
+            try {
+                $systemPrompt = (new SupportAgent())->instructions();
+                $httpRes = \Illuminate\Support\Facades\Http::timeout(15)
+                    ->post('https://text.pollinations.ai/', [
+                        'messages' => [
+                            ['role' => 'system', 'content' => $systemPrompt],
+                            ['role' => 'user', 'content' => $prompt]
+                        ],
+                        'model' => 'openai'
+                    ]);
+
+                if ($httpRes->successful() && !empty(trim($httpRes->body()))) {
+                    $response = trim($httpRes->body());
+                    $usedProvider = 'openai';
+                    $usedModel = 'gpt-4o-mini';
+                }
+            } catch (Throwable $pe) {
+                \Log::warning("Free safety net fallback failed: " . $pe->getMessage());
+            }
+        }
+
         if (!$response) {
             $errorMessage = isset($lastError) ? $lastError->getMessage() : 'All AI providers failed to respond.';
             return response()->json([

@@ -45,8 +45,8 @@ TEXT;
             $baseInstructions .= "\n\nUser Context:\n- Name: {$user->name}\n- Email: {$user->email}";
 
             if ($user->custom_instructions_enabled) {
-                $about = trim($user->custom_instructions_about);
-                $respond = trim($user->custom_instructions_respond);
+                $about = trim($user->custom_instructions_about ?? '');
+                $respond = trim($user->custom_instructions_respond ?? '');
 
                 if ($about || $respond) {
                     $baseInstructions .= "\n\nUser Custom Instructions (Follow these strictly):";
