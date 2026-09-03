@@ -1004,8 +1004,8 @@
                             $uniqueId = $agent->conversation_id ?? $agent->id;
                         @endphp
 
-                        <div class="history-item-wrapper" data-id="{{ $uniqueId }}" ondblclick="event.preventDefault(); event.stopPropagation(); handleRename('{{ $uniqueId }}')">
-                            <a class="nav-sub-link {{ $isActive ? 'active' : '' }}" id="history-link-{{ $uniqueId }}" href="/history/{{ $uniqueId }}" title="{{ $safeTitle }}" ondblclick="event.preventDefault(); event.stopPropagation(); handleRename('{{ $uniqueId }}')">
+                        <div class="history-item-wrapper" data-id="{{ $uniqueId }}">
+                            <a class="nav-sub-link {{ $isActive ? 'active' : '' }}" id="history-link-{{ $uniqueId }}" href="/history/{{ $uniqueId }}" title="{{ $safeTitle }}">
                                 <span class="text-truncate">{{ $label }}</span>
                             </a>
                             
@@ -1585,22 +1585,18 @@
             document.removeEventListener('click', closeHistoryMenu);
         }
 
-        function handleRename(targetId) {
-            var id = targetId || activeHistoryId;
+        function handleRename() {
             closeHistoryMenu();
             
-            var link = document.getElementById('history-link-' + id);
-            var btn = document.getElementById('history-btn-' + id);
-            var container = document.getElementById('inline-rename-' + id);
-            var input = document.getElementById('inline-rename-input-' + id);
+            document.getElementById('history-link-' + activeHistoryId).style.display = 'none';
+            document.getElementById('history-btn-' + activeHistoryId).style.display = 'none';
             
-            if (link) link.style.display = 'none';
-            if (btn) btn.style.display = 'none';
-            if (container) container.style.display = 'block';
-            if (input) {
-                input.focus();
-                input.select();
-            }
+            var container = document.getElementById('inline-rename-' + activeHistoryId);
+            var input = document.getElementById('inline-rename-input-' + activeHistoryId);
+            
+            container.style.display = 'block';
+            input.focus();
+            input.select();
         }
 
         function cancelInlineRename(id) {
