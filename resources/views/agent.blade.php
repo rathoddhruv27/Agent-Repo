@@ -5,7 +5,7 @@
 @section('content')
 <div class="chat-wrapper" style="position: relative;">
     <!-- Premium Categorized Model Selector -->
-    <div class="custom-model-dropdown" style="position: absolute; top: 16px; left: 24px; z-index: 10;">
+    <div class="custom-model-dropdown" style="position: absolute; top: 16px; left: 24px; z-index: 10; display: none;">
         <button id="modelDropdownBtn" class="model-dropdown-btn">
             <span id="selectedModelText">✨ Auto (Smart Fallback)</span>
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
@@ -122,131 +122,464 @@
             @php
                 $allSuggestions = [
                     // Laravel & PHP Core
-                    ['prompt' => 'Write a Laravel controller for products', 'label' => 'Laravel Product Controller'],
-                    ['prompt' => 'How do I optimize database queries in Laravel?', 'label' => 'Optimize Laravel Queries'],
-                    ['prompt' => 'Explain Eloquent relationships with code examples', 'label' => 'Eloquent Relationships'],
-                    ['prompt' => 'What are Laravel Service Providers and how do they work?', 'label' => 'Laravel Service Providers'],
-                    ['prompt' => 'How do I secure a REST API in Laravel?', 'label' => 'Laravel API Security'],
-                    ['prompt' => 'How do I set up cron jobs and task scheduling in Laravel?', 'label' => 'Laravel Cron Jobs'],
-                    ['prompt' => 'Explain Laravel Middleware with custom examples', 'label' => 'Laravel Middleware'],
-                    ['prompt' => 'How do I implement cursor pagination in Laravel?', 'label' => 'Cursor Pagination'],
-                    ['prompt' => 'How to implement JWT authentication in Laravel?', 'label' => 'JWT Auth in Laravel'],
-                    ['prompt' => 'How do I configure Redis queue worker in Laravel?', 'label' => 'Laravel Redis Queues'],
-                    ['prompt' => 'What are the new features in PHP 8.3?', 'label' => 'PHP 8.3 Features'],
-                    ['prompt' => 'What is a polymorphic relationship in Laravel?', 'label' => 'Polymorphic Relations'],
-                    ['prompt' => 'How to write unit tests using PHPUnit in Laravel?', 'label' => 'PHPUnit Testing'],
-                    ['prompt' => 'How do I create a custom Artisan command in Laravel?', 'label' => 'Custom Artisan Command'],
-                    ['prompt' => 'How do I handle file uploads and S3 storage in Laravel?', 'label' => 'Laravel S3 Uploads'],
-                    ['prompt' => 'Explain Laravel Event Listeners and Observers', 'label' => 'Laravel Observers'],
-                    ['prompt' => 'How do I use Laravel Sanctum for API tokens?', 'label' => 'Laravel Sanctum Auth'],
-                    ['prompt' => 'Explain Laravel Form Requests validation rules', 'label' => 'Laravel Form Validation'],
-                    ['prompt' => 'How to cache API responses using Redis in Laravel?', 'label' => 'Laravel Redis Cache'],
-                    ['prompt' => 'How to handle database transactions in Laravel?', 'label' => 'Database Transactions'],
+                    [
+                        'prompt' => 'Write a Laravel controller for products', 
+                        'label' => 'Laravel Product Controller'
+                    ],
+                    [
+                        'prompt' => 'How do I optimize database queries in Laravel?', 
+                        'label' => 'Optimize Laravel Queries'
+                    ],
+                    [
+                        'prompt' => 'Explain Eloquent relationships with code examples', 
+                        'label' => 'Eloquent Relationships'
+                    ],
+                    [
+                        'prompt' => 'What are Laravel Service Providers and how do they work?', 
+                        'label' => 'Laravel Service Providers'
+                    ],
+                    [
+                        'prompt' => 'How do I secure a REST API in Laravel?', 
+                        'label' => 'Laravel API Security'
+                    ],
+                    [
+                        'prompt' => 'How do I set up cron jobs and task scheduling in Laravel?', 
+                        'label' => 'Laravel Cron Jobs'
+                    ],
+                    [
+                        'prompt' => 'Explain Laravel Middleware with custom examples', 
+                        'label' => 'Laravel Middleware'
+                    ],
+                    [
+                        'prompt' => 'How do I implement cursor pagination in Laravel?', 
+                        'label' => 'Cursor Pagination'
+                    ],
+                    [
+                        'prompt' => 'How to implement JWT authentication in Laravel?', 
+                        'label' => 'JWT Auth in Laravel'
+                    ],
+                    [
+                        'prompt' => 'How do I configure Redis queue worker in Laravel?', 
+                        'label' => 'Laravel Redis Queues'
+                    ],
+                    [
+                        'prompt' => 'What are the new features in PHP 8.3?', 
+                        'label' => 'PHP 8.3 Features'
+                    ],
+                    [
+                        'prompt' => 'What is a polymorphic relationship in Laravel?', 
+                        'label' => 'Polymorphic Relations'
+                    ],
+                    [
+                        'prompt' => 'How to write unit tests using PHPUnit in Laravel?', 
+                        'label' => 'PHPUnit Testing'
+                    ],
+                    [
+                        'prompt' => 'How do I create a custom Artisan command in Laravel?', 
+                        'label' => 'Custom Artisan Command'
+                    ],
+                    [
+                        'prompt' => 'How do I handle file uploads and S3 storage in Laravel?', 
+                        'label' => 'Laravel S3 Uploads'
+                    ],
+                    [
+                        'prompt' => 'Explain Laravel Event Listeners and Observers', 
+                        'label' => 'Laravel Observers'
+                    ],
+                    [
+                        'prompt' => 'How do I use Laravel Sanctum for API tokens?', 
+                        'label' => 'Laravel Sanctum Auth'
+                    ],
+                    [
+                        'prompt' => 'Explain Laravel Form Requests validation rules', 
+                        'label' => 'Laravel Form Validation'
+                    ],
+                    [
+                        'prompt' => 'How to cache API responses using Redis in Laravel?', 
+                        'label' => 'Laravel Redis Cache'
+                    ],
+                    [
+                        'prompt' => 'How to handle database transactions in Laravel?', 
+                        'label' => 'Database Transactions'
+                    ],
 
                     // Frontend & UI/UX Design
-                    ['prompt' => 'Generate a modern glassmorphism CSS button', 'label' => 'Glassmorphism CSS Button'],
-                    ['prompt' => 'Create a beautiful pricing table in CSS with hover effects', 'label' => 'Pricing Table CSS'],
-                    ['prompt' => 'Write a Vue 3 component for a responsive modal dialog', 'label' => 'Vue 3 Modal Component'],
-                    ['prompt' => 'Explain React hooks like useState, useEffect, and useMemo', 'label' => 'React Hooks Guide'],
-                    ['prompt' => 'Create an aesthetic dark mode toggle in Vanilla JS', 'label' => 'Dark Mode Toggle JS'],
-                    ['prompt' => 'Generate a responsive CSS Grid dashboard layout', 'label' => 'CSS Grid Dashboard'],
-                    ['prompt' => 'Create a sliding image carousel in Vanilla JS', 'label' => 'JS Image Carousel'],
-                    ['prompt' => 'How to use Tailwind CSS v3 in a Laravel Blade template?', 'label' => 'Tailwind in Laravel'],
-                    ['prompt' => 'Create an animated loading spinner in pure CSS', 'label' => 'CSS Animated Spinner'],
-                    ['prompt' => 'Explain JavaScript Promises and Async/Await', 'label' => 'JS Async/Await'],
-                    ['prompt' => 'Create a custom toast notification library in JavaScript', 'label' => 'JS Toast Library'],
-                    ['prompt' => 'Write a custom hook in React for fetching API data', 'label' => 'React Custom Fetch Hook'],
-                    ['prompt' => 'Create a drag and drop file uploader in Vue.js', 'label' => 'Vue Drag & Drop Upload'],
-                    ['prompt' => 'Explain CSS Flexbox vs Grid with visual examples', 'label' => 'CSS Flexbox vs Grid'],
-                    ['prompt' => 'Create an accordion component using Tailwind CSS and JS', 'label' => 'Tailwind Accordion'],
-                    ['prompt' => 'How to build an infinite scroll feature in JavaScript?', 'label' => 'JS Infinite Scroll'],
-                    ['prompt' => 'Create a customizable tooltip component in HTML/CSS', 'label' => 'Custom CSS Tooltip'],
-                    ['prompt' => 'Explain virtual DOM in React and how it works', 'label' => 'Virtual DOM in React'],
-                    ['prompt' => 'Build a responsive navigation sidebar with micro-animations', 'label' => 'Responsive Sidebar UI'],
-                    ['prompt' => 'How to debounce user input in JavaScript for live search?', 'label' => 'JS Debounce Function'],
+                    [
+                        'prompt' => 'Generate a modern glassmorphism CSS button', 
+                        'label' => 'Glassmorphism CSS Button'
+                    ],
+                    [
+                        'prompt' => 'Create a beautiful pricing table in CSS with hover effects', 
+                        'label' => 'Pricing Table CSS'
+                    ],
+                    [
+                        'prompt' => 'Write a Vue 3 component for a responsive modal dialog', 
+                        'label' => 'Vue 3 Modal Component'
+                    ],
+                    [
+                        'prompt' => 'Explain React hooks like useState, useEffect, and useMemo', 
+                        'label' => 'React Hooks Guide'
+                    ],
+                    [
+                        'prompt' => 'Create an aesthetic dark mode toggle in Vanilla JS', 
+                        'label' => 'Dark Mode Toggle JS'
+                    ],
+                    [
+                        'prompt' => 'Generate a responsive CSS Grid dashboard layout', 
+                        'label' => 'CSS Grid Dashboard'
+                    ],
+                    [
+                        'prompt' => 'Create a sliding image carousel in Vanilla JS', 
+                        'label' => 'JS Image Carousel'
+                    ],
+                    [
+                        'prompt' => 'How to use Tailwind CSS v3 in a Laravel Blade template?', 
+                        'label' => 'Tailwind in Laravel'
+                    ],
+                    [
+                        'prompt' => 'Create an animated loading spinner in pure CSS', 
+                        'label' => 'CSS Animated Spinner'
+                    ],
+                    [
+                        'prompt' => 'Explain JavaScript Promises and Async/Await', 
+                        'label' => 'JS Async/Await'
+                    ],
+                    [
+                        'prompt' => 'Create a custom toast notification library in JavaScript', 
+                        'label' => 'JS Toast Library'
+                    ],
+                    [
+                        'prompt' => 'Write a custom hook in React for fetching API data', 
+                        'label' => 'React Custom Fetch Hook'
+                    ],
+                    [
+                        'prompt' => 'Create a drag and drop file uploader in Vue.js', 
+                        'label' => 'Vue Drag & Drop Upload'
+                    ],
+                    [
+                        'prompt' => 'Explain CSS Flexbox vs Grid with visual examples', 
+                        'label' => 'CSS Flexbox vs Grid'
+                    ],
+                    [
+                        'prompt' => 'Create an accordion component using Tailwind CSS and JS', 
+                        'label' => 'Tailwind Accordion'
+                    ],
+                    [
+                        'prompt' => 'How to build an infinite scroll feature in JavaScript?', 
+                        'label' => 'JS Infinite Scroll'
+                    ],
+                    [
+                        'prompt' => 'Create a customizable tooltip component in HTML/CSS', 
+                        'label' => 'Custom CSS Tooltip'
+                    ],
+                    [
+                        'prompt' => 'Explain virtual DOM in React and how it works', 
+                        'label' => 'Virtual DOM in React'
+                    ],
+                    [
+                        'prompt' => 'Build a responsive navigation sidebar with micro-animations', 
+                        'label' => 'Responsive Sidebar UI'
+                    ],
+                    [
+                        'prompt' => 'How to debounce user input in JavaScript for live search?', 
+                        'label' => 'JS Debounce Function'
+                    ],
 
                     // Database & SQL
-                    ['prompt' => 'How do I optimize MySQL slow queries with indexing?', 'label' => 'MySQL Query Indexing'],
-                    ['prompt' => 'Write a complex SQL query to join four tables with GROUP BY', 'label' => 'Complex SQL Joins'],
-                    ['prompt' => 'Explain database normalization up to 3NF', 'label' => 'Database Normalization'],
-                    ['prompt' => 'How to prevent SQL injection in PHP raw queries?', 'label' => 'Prevent SQL Injection'],
-                    ['prompt' => 'Explain MySQL vs PostgreSQL differences', 'label' => 'MySQL vs PostgreSQL'],
-                    ['prompt' => 'Write a database migration for a multi-tenant application', 'label' => 'Multi-tenant Migration'],
-                    ['prompt' => 'How to partition large database tables in MySQL?', 'label' => 'MySQL Table Partitioning'],
-                    ['prompt' => 'Explain ACID properties in database management systems', 'label' => 'ACID Database Properties'],
-                    ['prompt' => 'How do database triggers work in MySQL?', 'label' => 'MySQL Database Triggers'],
-                    ['prompt' => 'Write a stored procedure in SQL to calculate monthly revenues', 'label' => 'SQL Stored Procedure'],
-                    ['prompt' => 'How to handle N+1 query problems in Eloquent?', 'label' => 'Fix Eloquent N+1 Problem'],
-                    ['prompt' => 'Explain full-text search indexing in PostgreSQL', 'label' => 'Postgres Full-Text Search'],
-                    ['prompt' => 'How to back up and restore a MySQL database via CLI?', 'label' => 'MySQL CLI Backup'],
-                    ['prompt' => 'Write a query to find duplicate records in a MySQL table', 'label' => 'Find Duplicate SQL Records'],
-                    ['prompt' => 'Explain CTEs (Common Table Expressions) in SQL', 'label' => 'SQL Common Table Expressions'],
+                    [
+                        'prompt' => 'How do I optimize MySQL slow queries with indexing?', 
+                        'label' => 'MySQL Query Indexing'
+                    ],
+                    [
+                        'prompt' => 'Write a complex SQL query to join four tables with GROUP BY', 
+                        'label' => 'Complex SQL Joins'
+                    ],
+                    [
+                        'prompt' => 'Explain database normalization up to 3NF', 
+                        'label' => 'Database Normalization'
+                    ],
+                    [
+                        'prompt' => 'How to prevent SQL injection in PHP raw queries?', 
+                        'label' => 'Prevent SQL Injection'
+                    ],
+                    [
+                        'prompt' => 'Explain MySQL vs PostgreSQL differences', 
+                        'label' => 'MySQL vs PostgreSQL'
+                    ],
+                    [
+                        'prompt' => 'Write a database migration for a multi-tenant application', 
+                        'label' => 'Multi-tenant Migration'
+                    ],
+                    [
+                        'prompt' => 'How to partition large database tables in MySQL?', 
+                        'label' => 'MySQL Table Partitioning'
+                    ],
+                    [
+                        'prompt' => 'Explain ACID properties in database management systems', 
+                        'label' => 'ACID Database Properties'
+                    ],
+                    [
+                        'prompt' => 'How do database triggers work in MySQL?', 
+                        'label' => 'MySQL Database Triggers'
+                    ],
+                    [
+                        'prompt' => 'Write a stored procedure in SQL to calculate monthly revenues', 
+                        'label' => 'SQL Stored Procedure'
+                    ],
+                    [
+                        'prompt' => 'How to handle N+1 query problems in Eloquent?', 
+                        'label' => 'Fix Eloquent N+1 Problem'
+                    ],
+                    [
+                        'prompt' => 'Explain full-text search indexing in PostgreSQL', 
+                        'label' => 'Postgres Full-Text Search'
+                    ],
+                    [
+                        'prompt' => 'How to back up and restore a MySQL database via CLI?', 
+                        'label' => 'MySQL CLI Backup'
+                    ],
+                    [
+                        'prompt' => 'Write a query to find duplicate records in a MySQL table', 
+                        'label' => 'Find Duplicate SQL Records'
+                    ],
+                    [
+                        'prompt' => 'Explain CTEs (Common Table Expressions) in SQL', 
+                        'label' => 'SQL Common Table Expressions'
+                    ],
 
                     // DevOps, Security & Infrastructure
-                    ['prompt' => 'What are the best practices for Dockerizing a Laravel app?', 'label' => 'Dockerize Laravel App'],
-                    ['prompt' => 'How to configure a CI/CD pipeline in GitHub Actions for Laravel?', 'label' => 'GitHub Actions CI/CD'],
-                    ['prompt' => 'What is CORS error and how do I fix it properly?', 'label' => 'Fix CORS Headers Error'],
-                    ['prompt' => 'Generate a production-ready Nginx configuration for PHP-FPM', 'label' => 'Nginx Config PHP-FPM'],
-                    ['prompt' => 'How to set up SSL certificates with Let\'s Encrypt and Certbot?', 'label' => 'Let\'s Encrypt SSL Setup'],
-                    ['prompt' => 'How to prevent CSRF attacks in web applications?', 'label' => 'Prevent CSRF Attacks'],
-                    ['prompt' => 'How to set up rate limiting for web endpoints in Laravel?', 'label' => 'API Rate Limiting'],
-                    ['prompt' => 'Explain OAuth2 authorization code flow with PKCE', 'label' => 'OAuth2 PKCE Flow'],
-                    ['prompt' => 'How to configure Redis cluster for session storage?', 'label' => 'Redis Session Storage'],
-                    ['prompt' => 'Write a Docker Compose file for PHP, MySQL, and Nginx', 'label' => 'Docker Compose Stack'],
-                    ['prompt' => 'How to secure environment variables in cloud deployments?', 'label' => 'Cloud Secrets Management'],
-                    ['prompt' => 'Explain Kubernetes pods, services, and deployments', 'label' => 'Kubernetes Fundamentals'],
-                    ['prompt' => 'How to monitor Laravel application performance using Prometheus?', 'label' => 'Laravel Monitoring'],
-                    ['prompt' => 'Generate a standard .gitignore file for Laravel projects', 'label' => 'Laravel .gitignore'],
-                    ['prompt' => 'How to set up SSH key authentication on Linux servers?', 'label' => 'Linux SSH Key Setup'],
+                    [
+                        'prompt' => 'What are the best practices for Dockerizing a Laravel app?', 
+                        'label' => 'Dockerize Laravel App'
+                    ],
+                    [
+                        'prompt' => 'How to configure a CI/CD pipeline in GitHub Actions for Laravel?', 
+                        'label' => 'GitHub Actions CI/CD'
+                    ],
+                    [
+                        'prompt' => 'What is CORS error and how do I fix it properly?', 
+                        'label' => 'Fix CORS Headers Error'
+                    ],
+                    [
+                        'prompt' => 'Generate a production-ready Nginx configuration for PHP-FPM', 
+                        'label' => 'Nginx Config PHP-FPM'
+                    ],
+                    [
+                        'prompt' => 'How to set up SSL certificates with Let\'s Encrypt and Certbot?', 
+                        'label' => 'Let\'s Encrypt SSL Setup'
+                    ],
+                    [
+                        'prompt' => 'How to prevent CSRF attacks in web applications?', 
+                        'label' => 'Prevent CSRF Attacks'
+                    ],
+                    [
+                        'prompt' => 'How to set up rate limiting for web endpoints in Laravel?', 
+                        'label' => 'API Rate Limiting'
+                    ],
+                    [
+                        'prompt' => 'Explain OAuth2 authorization code flow with PKCE', 
+                        'label' => 'OAuth2 PKCE Flow'
+                    ],
+                    [
+                        'prompt' => 'How to configure Redis cluster for session storage?', 
+                        'label' => 'Redis Session Storage'
+                    ],
+                    [
+                        'prompt' => 'Write a Docker Compose file for PHP, MySQL, and Nginx', 
+                        'label' => 'Docker Compose Stack'
+                    ],
+                    [
+                        'prompt' => 'How to secure environment variables in cloud deployments?', 
+                        'label' => 'Cloud Secrets Management'
+                    ],
+                    [
+                        'prompt' => 'Explain Kubernetes pods, services, and deployments', 
+                        'label' => 'Kubernetes Fundamentals'
+                    ],
+                    [
+                        'prompt' => 'How to monitor Laravel application performance using Prometheus?', 
+                        'label' => 'Laravel Monitoring'
+                    ],
+                    [
+                        'prompt' => 'Generate a standard .gitignore file for Laravel projects', 
+                        'label' => 'Laravel .gitignore'
+                    ],
+                    [
+                        'prompt' => 'How to set up SSH key authentication on Linux servers?', 
+                        'label' => 'Linux SSH Key Setup'
+                    ],
 
                     // Python & Data Science
-                    ['prompt' => 'Write a Python script to scrape a website using BeautifulSoup', 'label' => 'Python Web Scraper'],
-                    ['prompt' => 'How to parse and filter JSON data using Python Pandas?', 'label' => 'Pandas Data Filtering'],
-                    ['prompt' => 'Create a REST API with FastAPI and Pydantic in Python', 'label' => 'FastAPI REST Server'],
-                    ['prompt' => 'Explain Python decorators with clear code examples', 'label' => 'Python Decorators'],
-                    ['prompt' => 'How to build a simple machine learning model with scikit-learn?', 'label' => 'Scikit-Learn ML Model'],
-                    ['prompt' => 'Write a Python script to send automated emails via SMTP', 'label' => 'Python SMTP Email'],
-                    ['prompt' => 'Explain Python generators and yield statement', 'label' => 'Python Generators'],
-                    ['prompt' => 'How to clean messy dataset using Pandas dataframe?', 'label' => 'Pandas Data Cleaning'],
-                    ['prompt' => 'Write an asynchronous Python web server with asyncio', 'label' => 'Python Asyncio Server'],
-                    ['prompt' => 'How to convert CSV to JSON format using Python script?', 'label' => 'Python CSV to JSON'],
-                    ['prompt' => 'Explain list comprehensions vs map/filter in Python', 'label' => 'Python List Comprehension'],
-                    ['prompt' => 'Write a Python script to resize images using PIL/Pillow', 'label' => 'Python Image Resizer'],
-                    ['prompt' => 'How to connect Python to MySQL database using mysql-connector?', 'label' => 'Python MySQL Connector'],
-                    ['prompt' => 'Explain multi-threading vs multi-processing in Python', 'label' => 'Python Multiprocessing'],
-                    ['prompt' => 'Create a command line interface CLI tool using Click in Python', 'label' => 'Python CLI Tool'],
+                    [
+                        'prompt' => 'Write a Python script to scrape a website using BeautifulSoup', 
+                        'label' => 'Python Web Scraper'
+                    ],
+                    [
+                        'prompt' => 'How to parse and filter JSON data using Python Pandas?', 
+                        'label' => 'Pandas Data Filtering'
+                    ],
+                    [
+                        'prompt' => 'Create a REST API with FastAPI and Pydantic in Python', 
+                        'label' => 'FastAPI REST Server'
+                    ],
+                    [
+                        'prompt' => 'Explain Python decorators with clear code examples', 
+                        'label' => 'Python Decorators'
+                    ],
+                    [
+                        'prompt' => 'How to build a simple machine learning model with scikit-learn?', 
+                        'label' => 'Scikit-Learn ML Model'
+                    ],
+                    [
+                        'prompt' => 'Write a Python script to send automated emails via SMTP', 
+                        'label' => 'Python SMTP Email'
+                    ],
+                    [
+                        'prompt' => 'Explain Python generators and yield statement', 
+                        'label' => 'Python Generators'
+                    ],
+                    [
+                        'prompt' => 'How to clean messy dataset using Pandas dataframe?', 
+                        'label' => 'Pandas Data Cleaning'
+                    ],
+                    [
+                        'prompt' => 'Write an asynchronous Python web server with asyncio', 
+                        'label' => 'Python Asyncio Server'
+                    ],
+                    [
+                        'prompt' => 'How to convert CSV to JSON format using Python script?', 
+                        'label' => 'Python CSV to JSON'
+                    ],
+                    [
+                        'prompt' => 'Explain list comprehensions vs map/filter in Python', 
+                        'label' => 'Python List Comprehension'
+                    ],
+                    [
+                        'prompt' => 'Write a Python script to resize images using PIL/Pillow', 
+                        'label' => 'Python Image Resizer'
+                    ],
+                    [
+                        'prompt' => 'How to connect Python to MySQL database using mysql-connector?', 
+                        'label' => 'Python MySQL Connector'
+                    ],
+                    [
+                        'prompt' => 'Explain multi-threading vs multi-processing in Python', 
+                        'label' => 'Python Multiprocessing'
+                    ],
+                    [
+                        'prompt' => 'Create a command line interface CLI tool using Click in Python', 
+                        'label' => 'Python CLI Tool'
+                    ],
 
                     // Architecture & System Design
-                    ['prompt' => 'Explain SOLID principles in object-oriented programming', 'label' => 'SOLID Architecture Principles'],
-                    ['prompt' => 'Explain the MVC (Model-View-Controller) architecture pattern', 'label' => 'MVC Architecture Pattern'],
-                    ['prompt' => 'Explain Dependency Injection and Inversion of Control', 'label' => 'Dependency Injection'],
-                    ['prompt' => 'How to design a scalable microservices architecture?', 'label' => 'Microservices Architecture'],
-                    ['prompt' => 'Explain Event-Driven Architecture with message queues', 'label' => 'Event-Driven Architecture'],
-                    ['prompt' => 'What is Repository Pattern and when should I use it?', 'label' => 'Repository Pattern'],
-                    ['prompt' => 'Explain Cache-Aside strategy vs Read-Through caching', 'label' => 'Caching Strategies'],
-                    ['prompt' => 'How to handle database sharding in high-traffic applications?', 'label' => 'Database Sharding'],
-                    ['prompt' => 'Explain Domain-Driven Design (DDD) concepts', 'label' => 'Domain-Driven Design'],
-                    ['prompt' => 'What is CQRS (Command Query Responsibility Segregation)?', 'label' => 'CQRS Pattern'],
+                    [
+                        'prompt' => 'Explain SOLID principles in object-oriented programming', 
+                        'label' => 'SOLID Architecture Principles'
+                    ],
+                    [
+                        'prompt' => 'Explain the MVC (Model-View-Controller) architecture pattern', 
+                        'label' => 'MVC Architecture Pattern'
+                    ],
+                    [
+                        'prompt' => 'Explain Dependency Injection and Inversion of Control', 
+                        'label' => 'Dependency Injection'
+                    ],
+                    [
+                        'prompt' => 'How to design a scalable microservices architecture?', 
+                        'label' => 'Microservices Architecture'
+                    ],
+                    [
+                        'prompt' => 'Explain Event-Driven Architecture with message queues', 
+                        'label' => 'Event-Driven Architecture'
+                    ],
+                    [
+                        'prompt' => 'What is Repository Pattern and when should I use it?', 
+                        'label' => 'Repository Pattern'
+                    ],
+                    [
+                        'prompt' => 'Explain Cache-Aside strategy vs Read-Through caching', 
+                        'label' => 'Caching Strategies'
+                    ],
+                    [
+                        'prompt' => 'How to handle database sharding in high-traffic applications?', 
+                        'label' => 'Database Sharding'
+                    ],
+                    [
+                        'prompt' => 'Explain Domain-Driven Design (DDD) concepts', 
+                        'label' => 'Domain-Driven Design'
+                    ],
+                    [
+                        'prompt' => 'What is CQRS (Command Query Responsibility Segregation)?', 
+                        'label' => 'CQRS Pattern'
+                    ],
 
                     // AI & Prompt Engineering
-                    ['prompt' => 'How to implement Retrieval-Augmented Generation (RAG) in Python?', 'label' => 'RAG System Implementation'],
-                    ['prompt' => 'Explain vector embeddings and cosine similarity search', 'label' => 'Vector Embeddings & Search'],
-                    ['prompt' => 'Write a system prompt for an expert code reviewer AI agent', 'label' => 'AI System Prompt Design'],
-                    ['prompt' => 'How to fine-tune an open-source LLM like Llama 3?', 'label' => 'LLM Fine-Tuning Guide'],
-                    ['prompt' => 'What is function calling in LLMs and how does it work?', 'label' => 'LLM Function Calling'],
-                    ['prompt' => 'Explain the Transformer architecture in neural networks', 'label' => 'Transformer Neural Network'],
-                    ['prompt' => 'How to connect Pinecone vector database with LangChain?', 'label' => 'LangChain & Pinecone'],
-                    ['prompt' => 'Write a Python script to generate text embeddings using OpenAI API', 'label' => 'Generate AI Embeddings'],
-                    ['prompt' => 'Explain agentic workflows and multi-agent coordination', 'label' => 'Agentic Workflows'],
-                    ['prompt' => 'How to measure and reduce LLM hallucination in production?', 'label' => 'Reduce AI Hallucinations'],
+                    [
+                        'prompt' => 'How to implement Retrieval-Augmented Generation (RAG) in Python?', 
+                        'label' => 'RAG System Implementation'
+                    ],
+                    [
+                        'prompt' => 'Explain vector embeddings and cosine similarity search', 
+                        'label' => 'Vector Embeddings & Search'
+                    ],
+                    [
+                        'prompt' => 'Write a system prompt for an expert code reviewer AI agent', 
+                        'label' => 'AI System Prompt Design'
+                    ],
+                    [
+                        'prompt' => 'How to fine-tune an open-source LLM like Llama 3?', 
+                        'label' => 'LLM Fine-Tuning Guide'
+                    ],
+                    [
+                        'prompt' => 'What is function calling in LLMs and how does it work?', 
+                        'label' => 'LLM Function Calling'
+                    ],
+                    [
+                        'prompt' => 'Explain the Transformer architecture in neural networks', 
+                        'label' => 'Transformer Neural Network'
+                    ],
+                    [
+                        'prompt' => 'How to connect Pinecone vector database with LangChain?', 
+                        'label' => 'LangChain & Pinecone'
+                    ],
+                    [
+                        'prompt' => 'Write a Python script to generate text embeddings using OpenAI API', 
+                        'label' => 'Generate AI Embeddings'
+                    ],
+                    [
+                        'prompt' => 'Explain agentic workflows and multi-agent coordination', 
+                        'label' => 'Agentic Workflows'
+                    ],
+                    [
+                        'prompt' => 'How to measure and reduce LLM hallucination in production?', 
+                        'label' => 'Reduce AI Hallucinations'
+                    ],
 
                     // Web Basics & Utilities
-                    ['prompt' => 'Write a regular expression to validate strong passwords', 'label' => 'Password Validation Regex'],
-                    ['prompt' => 'Explain the difference between GET, POST, PUT, PATCH, and DELETE', 'label' => 'HTTP Verbs Explained'],
-                    ['prompt' => 'Generate a basic semantic HTML5 boilerplate with meta tags', 'label' => 'HTML5 Semantic Boilerplate'],
-                    ['prompt' => 'What is the difference between require and include in PHP?', 'label' => 'Require vs Include PHP'],
-                    ['prompt' => 'Generate a secure random password using PHP random_bytes', 'label' => 'PHP Secure Password Gen'],
-                    ['prompt' => 'Explain WebSocket vs HTTP Long-Polling for real-time apps', 'label' => 'WebSocket vs Long-Polling']
+                    [
+                        'prompt' => 'Write a regular expression to validate strong passwords', 
+                        'label' => 'Password Validation Regex'
+                    ],
+                    [
+                        'prompt' => 'Explain the difference between GET, POST, PUT, PATCH, and DELETE', 
+                        'label' => 'HTTP Verbs Explained'
+                    ],
+                    [
+                        'prompt' => 'Generate a basic semantic HTML5 boilerplate with meta tags', 
+                        'label' => 'HTML5 Semantic Boilerplate'
+                    ],
+                    [
+                        'prompt' => 'What is the difference between require and include in PHP?', 
+                        'label' => 'Require vs Include PHP'
+                    ],
+                    [
+                        'prompt' => 'Generate a secure random password using PHP random_bytes', 
+                        'label' => 'PHP Secure Password Gen'
+                    ],
+                    [
+                        'prompt' => 'Explain WebSocket vs HTTP Long-Polling for real-time apps', 
+                        'label' => 'WebSocket vs Long-Polling'
+                    ]
                 ];
                 
                 shuffle($allSuggestions);
