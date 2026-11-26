@@ -85,6 +85,14 @@ return [
             'driver' => 'gemini',
             'key'    => env('GEMINI_API_KEY'),
             'model'  => env('GEMINI_MODEL', 'gemini-3-flash-preview'),
+            'models' => [
+                'text' => [
+                    'default' => env('GEMINI_MODEL', 'gemini-3-flash-preview'),
+                ],
+                'image' => [
+                    'default' => env('GEMINI_IMAGE_MODEL', 'gemini-3.1-flash-image-preview'),
+                ],
+            ],
         ],
 
         'openai' => [
@@ -133,10 +141,7 @@ return [
             'key' => env('ELEVENLABS_API_KEY'),
         ],
 
-        'gemini' => [
-            'driver' => 'gemini',
-            'key' => env('GEMINI_API_KEY'),
-        ],
+        // 'gemini' defined above
 
         'groq' => [
             'driver' => 'groq',

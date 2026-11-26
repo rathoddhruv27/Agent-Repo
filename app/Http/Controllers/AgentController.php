@@ -47,6 +47,8 @@ class AgentController extends Controller
                 'icon' => '🎨',
                 'color' => '#8b5cf6',
                 'models' => [
+                    ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-3.1-flash-image-preview', 'label' => 'Gemini 3.1 Flash Image', 'desc' => 'Google Gemini image generation', 'vision' => false, 'type' => 'image'],
+                    ['name' => 'gemini', 'provider' => Lab::Gemini, 'model' => 'gemini-2.5-flash-image', 'label' => 'Gemini 2.5 Flash Image', 'desc' => 'Google Gemini fast image gen', 'vision' => false, 'type' => 'image'],
                     ['name' => 'openai', 'provider' => Lab::OpenAI, 'model' => 'dall-e-3', 'label' => 'DALL·E 3', 'desc' => 'OpenAI image generation', 'vision' => false, 'type' => 'image'],
                     ['name' => 'pollinations', 'provider' => null, 'model' => 'flux', 'label' => 'Flux (Pollinations)', 'desc' => 'Free high-quality image gen', 'vision' => false, 'type' => 'image'],
                     ['name' => 'pollinations', 'provider' => null, 'model' => 'stable-diffusion', 'label' => 'Stable Diffusion XL', 'desc' => 'Open-source image generation', 'vision' => false, 'type' => 'image'],
@@ -251,41 +253,14 @@ class AgentController extends Controller
         $response = null;
 
         // --- IMAGE GENERATION INTERCEPTION ---
-        // If the user explicitly asks for an image, bypass the LLM and generate it directly!
+        // If the user explicitly asks for an image, try Gemini first with automatic fallback.
         if (preg_match('/(generate|create|make|draw|show).*(image|picture|photo|drawing|portrait|logo)/i', $prompt)) {
-            // Bypass Tool instantiation since it's hardcoded below
-            
-            // For Laravel AI ToolRequest constructor, we need to pass data
-            // We can just call it directly by bypassing the ToolRequest object or creating one
-            
-            // Since ToolRequest constructor in laravel/ai might be strict, we can just execute the logic:
-            $encodedPrompt = urlencode($prompt);
-            $imageUrl = "https://image.pollinations.ai/prompt/{$encodedPrompt}?width=1024&height=1024&nologo=true";
-            
-            $response = <<<HTML
-<div class="generated-image-container my-3" style="width: 100%; max-width: 512px;">
-    <style>
-        @keyframes skeleton-pulse {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-    </style>
-    <div class="image-wrapper" style="position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #1a1a1a; aspect-ratio: 1 / 1; width: 100%;">
-        <div class="skeleton-loader" style="position: absolute; inset: 0; background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%); background-size: 200% 100%; animation: skeleton-pulse 1.5s infinite linear;"></div>
-        <img src="{$imageUrl}" alt="{$prompt}" onload="this.previousElementSibling.style.display='none'; this.style.opacity=1; this.nextElementSibling.style.opacity=1;" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; opacity: 0; transition: opacity 0.5s ease; position: relative; z-index: 1;" onclick="openFullscreenImage(this.src)">
-        <div class="image-actions" style="position: absolute; bottom: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; opacity: 0; transition: opacity 0.5s ease; z-index: 2;">
-            <button type="button" class="btn-image-action" style="background: rgba(255,255,255,0.85); color: #333; border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 2px 6px rgba(0,0,0,0.15);" onclick="alert('Image editing coming soon!')">
-                Edit
-            </button>
-            <a href="{$imageUrl}" download="generated.jpg" target="_blank" style="background: rgba(255,255,255,0.85); color: #333; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); text-decoration: none;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            </a>
-        </div>
-    </div>
-</div>
-HTML;
-            $usedProvider = 'openai';
-            $usedModel = 'dall-e-3';
+            $selectedProvider = $request->input('model_selection', 'auto');
+            $result = \App\Ai\Tools\GenerateImageTool::generateImage($prompt, $selectedProvider, $attachments);
+
+            $response = \App\Ai\Tools\GenerateImageTool::renderImageHtml($result['url'], $prompt);
+            $usedProvider = $result['provider'];
+            $usedModel = $result['model'];
         }
 
         if (!$response) {
